@@ -1,0 +1,17 @@
+{
+  "projectName": "safecility-test",
+  "mqtt": {
+    "appID": "v3-prod",
+    "username": "v3-prod@ttn",
+    "address": "ssl://eu1.cloud.thethings.network:8883"
+  },
+  "topics": {
+    "joins": "test-joins-dali",
+    "uplinks": "test-dali-bytes",
+    "downlinks": "test-dali-to-ttn-downlink",
+    "downlinkReceipts": "test-dali-downlink-receipts"
+  },
+  "subscriptions": {
+    "downlinks": "test-dali-to-ttn-downlink-sub"
+  }
+}

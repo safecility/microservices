@@ -1,0 +1,14 @@
+{
+  "appID": "v3-prod",
+  "username": "v3-prod@ttn",
+  "projectName": "safecility-prod",
+  "mqttAddress": "eu1.cloud.thethings.network:1883",
+  "topics": {
+    "joins": "prod-joins-dali",
+    "uplinks": "prod-dali-bytes",
+    "downlinkReceipts": "prod-dali-downlink-receipts"
+  },
+  "subscriptions": {
+    "downlinks": "prod-ttn-dali-downlink-sub"
+  }
+}
