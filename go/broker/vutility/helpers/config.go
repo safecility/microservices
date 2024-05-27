@@ -7,27 +7,14 @@ import (
 	"os"
 )
 
-type MqttConfig struct {
-	AppID    string `json:"appID"`
-	Username string `json:"username"`
-	Address  string `json:"address"`
-}
-
 type Config struct {
 	ProjectName string `json:"projectName"`
-	Mqtt        MqttConfig
 	Topics      struct {
-		Joins            string `json:"joins"`
-		Uplinks          string `json:"uplinks"`
-		Downlinks        string `json:"downlinks"`
-		DownlinkReceipts string `json:"downlinkReceipts"`
+		Uplinks string `json:"uplinks"`
 	} `json:"topics"`
-	Subscriptions struct {
-		Downlinks string `json:"downlinks"`
-	} `json:"subscriptions"`
 }
 
-// GetConfig for ttn the Username has the form: username = fmt.Sprintf("%s@ttn", p.AppID)
+// GetConfig for Vutility
 func GetConfig(deployment string) *Config {
 	fileName := fmt.Sprintf("%s-config.json", deployment)
 

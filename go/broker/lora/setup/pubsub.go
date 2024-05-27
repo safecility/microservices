@@ -4,7 +4,7 @@ import (
 	"cloud.google.com/go/pubsub"
 	"context"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/broker/lora/dali/helpers"
+	"github.com/safecility/microservices/go/broker/lora/helpers"
 	"os"
 	"time"
 )

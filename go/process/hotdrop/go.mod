@@ -1,13 +1,15 @@
-module github.com/safecility/microservices/go/broker/lora
+module github.com/safecility/microservices/go/process/hotdrop
 
 go 1.21
 
+toolchain go1.21.4
+
 require (
+	cloud.google.com/go/datastore v1.15.0
 	cloud.google.com/go/pubsub v1.38.0
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240524151348-a858faa9cc42
-	github.com/safecility/go/mqtt v0.0.0-20240524151348-a858faa9cc42
-	github.com/safecility/go/setup v0.0.0-20240524151348-a858faa9cc42
+	github.com/safecility/go/lib v0.0.0-20240527143814-83a0397994a0
+	github.com/safecility/go/setup v0.0.0-20240527143814-83a0397994a0
 )
 
 require (
@@ -20,7 +22,6 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/eclipse/paho.mqtt.golang v1.4.3 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -30,7 +31,6 @@ require (
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
 	github.com/googleapis/gax-go/v2 v2.12.4 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/redis/go-redis/v9 v9.5.1 // indirect
@@ -51,6 +51,6 @@ require (
 	google.golang.org/genproto v0.0.0-20240401170217-c3f982113cda // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434 // indirect
-	google.golang.org/grpc v1.64.0 // indirect
+	google.golang.org/grpc v1.63.2 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 )

@@ -8,7 +8,7 @@ import (
 	"github.com/safecility/go/mqtt/lib"
 	"github.com/safecility/go/mqtt/server"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/broker/lora/dali/helpers"
+	"github.com/safecility/microservices/go/broker/lora/helpers"
 	"net/http"
 	"os"
 )
@@ -16,7 +16,7 @@ import (
 func main() {
 	deployment, isSet := os.LookupEnv("Deployment")
 	if !isSet {
-		deployment = string(helpers.Local)
+		deployment = string(setup.Local)
 	}
 	config := helpers.GetConfig(deployment)
 

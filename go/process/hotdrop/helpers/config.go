@@ -7,27 +7,22 @@ import (
 	"os"
 )
 
-type MqttConfig struct {
-	AppID    string `json:"appID"`
-	Username string `json:"username"`
-	Address  string `json:"address"`
-}
+const (
+	OSDeploymentKey = "HOTDROP_DEPLOYMENT"
+)
 
 type Config struct {
 	ProjectName string `json:"projectName"`
-	Mqtt        MqttConfig
 	Topics      struct {
-		Joins            string `json:"joins"`
-		Uplinks          string `json:"uplinks"`
-		Downlinks        string `json:"downlinks"`
-		DownlinkReceipts string `json:"downlinkReceipts"`
+		Uplinks  string `json:"uplinks"`
+		Pipeline string `json:"pipeline"`
 	} `json:"topics"`
 	Subscriptions struct {
-		Downlinks string `json:"downlinks"`
+		Uplinks string `json:"uplinks"`
 	} `json:"subscriptions"`
 }
 
-// GetConfig for ttn the Username has the form: username = fmt.Sprintf("%s@ttn", p.AppID)
+// GetConfig creates a config for the specified deployment
 func GetConfig(deployment string) *Config {
 	fileName := fmt.Sprintf("%s-config.json", deployment)
 
