@@ -1,0 +1,19 @@
+{
+  "projectName": "safecility-test",
+  "sql": {
+    "user": "editor",
+    "host": "localhost",
+    "port": 3306,
+    "database": "safecility"
+  },
+  "topics": {
+    "uplinks": "local-vu-uplinks",
+    "pipeline": "local-power-usage"
+  },
+  "subscriptions": {
+    "uplinks": "local-vu-uplinks-test"
+  },
+  "store": {
+    "hotdrop": false
+  }
+}

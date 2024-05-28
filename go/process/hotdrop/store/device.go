@@ -1,7 +1,9 @@
 package store
 
-import "github.com/safecility/go/lib"
+import (
+	"github.com/safecility/microservices/go/process/hotdrop/messages"
+)
 
 type DeviceStore interface {
-	GetDevice(uid string) (*lib.Device, error)
+	GetDevice(uid string) (*messages.PowerDevice, error)
 }

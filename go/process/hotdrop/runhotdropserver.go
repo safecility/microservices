@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/datastore"
 	"cloud.google.com/go/pubsub"
 	"context"
+	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
 	"github.com/safecility/microservices/go/process/hotdrop/helpers"
@@ -50,7 +51,24 @@ func main() {
 	}
 	d, err := store.NewDatastoreHotdrop(dsClient)
 
-	hotDropServer := server.NewHotDropServer(nil, d, uplinksSubscription, pipelineTopic)
+	if err != nil {
+		log.Fatal().Err(err).Msg("could not get datastore hotdrop")
+	}
+
+	sqlSecretName := fmt.Sprintf("projects/%s/secrets/dali-sql-password/versions/1", config.ProjectName)
+	sqlSecret := setup.GetSecret(sqlSecretName)
+	config.Sql.Password = sqlSecret
+
+	s, err := setup.NewSafecilitySql(config.Sql)
+	if err != nil {
+		log.Fatal().Err(err).Msg("could not setup safecility sql")
+	}
+	c, err := store.NewDeviceSql(s)
+	if err != nil {
+		log.Fatal().Err(err).Msg("could not setup safecility device sql")
+	}
+
+	hotDropServer := server.NewHotDropServer(c, d, uplinksSubscription, pipelineTopic, config.Store.Hotdrop)
 	hotDropServer.Start()
 
 }

@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/lib/stream"
 	"github.com/safecility/microservices/go/process/hotdrop/messages"
 	"github.com/safecility/microservices/go/process/hotdrop/store"
 	"net/http"
@@ -13,16 +14,17 @@ import (
 )
 
 type HotDropServer struct {
-	cache    store.DeviceStore
-	store    *store.DatastoreHotdrop
-	sub      *pubsub.Subscription
-	pipeline *pubsub.Topic
+	cache        store.DeviceStore
+	store        *store.DatastoreHotdrop
+	sub          *pubsub.Subscription
+	pipeline     *pubsub.Topic
+	storeHotdrop bool
 }
 
 func NewHotDropServer(cache store.DeviceStore, store *store.DatastoreHotdrop,
-	sub *pubsub.Subscription, topic *pubsub.Topic) HotDropServer {
+	sub *pubsub.Subscription, topic *pubsub.Topic, storeHotdrop bool) HotDropServer {
 
-	return HotDropServer{sub: sub, cache: cache, store: store, pipeline: topic}
+	return HotDropServer{sub: sub, cache: cache, store: store, pipeline: topic, storeHotdrop: storeHotdrop}
 }
 
 func (es *HotDropServer) Start() {
@@ -46,30 +48,41 @@ func (es *HotDropServer) receive() {
 
 		hdData := newPowerData.GetHotDropReadings()
 		for _, r := range hdData {
+			log.Debug().Str("eui", r.DeviceEUI).Msg("hotdrop message")
+			var pd *messages.PowerDevice
 
-			log.Debug().Str("eui", r.DeviceUID).Msg("hotdrop message")
-
-			d, irr := es.cache.GetDevice(r.DeviceUID)
-			if irr != nil {
-				log.Err(irr).Str("uid", r.DeviceUID).Msg("could not get device")
+			if es.cache != nil {
+				pd, err = es.cache.GetDevice(r.DeviceEUI)
+				if err != nil {
+					log.Warn().Err(err).Str("uid", r.DeviceEUI).Msg("could not get device")
+				}
+				if pd != nil {
+					r.PowerDevice = pd
+				}
 			}
 
-			//if we don't have an admin device we still save hotdrop messages
-			go func() {
-				crr := es.store.AddHotdropMessage(&r)
-				if crr != nil {
-					log.Err(crr).Msg("could not add hotdrop data")
-				}
-			}()
+			//if we don't have an admin device we can still save hotdrop messages
+			if es.storeHotdrop {
+				go func() {
+					crr := es.store.AddHotdropMessage(&r)
+					if crr != nil {
+						log.Err(crr).Msg("could not add hotdrop data")
+					}
+				}()
+			}
 
 			// if we aren't tracking the device move to next
-			if d == nil {
+			if pd == nil {
 				continue
 			}
 
+			u := messages.GetPowerUsage(r, pd)
+			topic, err := stream.PublishToTopic(u, es.pipeline)
 			if err != nil {
 				log.Err(err).Msg("could not publish usage to topic")
+				continue
 			}
+			log.Debug().Str("topic", *topic).Msg("published usage to topic")
 		}
 	})
 	if err != nil {

@@ -8,8 +8,8 @@ require (
 	cloud.google.com/go/datastore v1.15.0
 	cloud.google.com/go/pubsub v1.38.0
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240527143814-83a0397994a0
-	github.com/safecility/go/setup v0.0.0-20240527143814-83a0397994a0
+	github.com/safecility/go/lib v0.0.0-20240528113610-ae4b690648c3
+	github.com/safecility/go/setup v0.0.0-20240528113610-ae4b690648c3
 )
 
 require (
@@ -26,6 +26,7 @@ require (
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect

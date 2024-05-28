@@ -23,6 +23,6 @@ func (d *DatastoreHotdrop) AddHotdropMessage(m *messages.HotdropDeviceReading) e
 	if err != nil {
 		return err
 	}
-	log.Debug().Str("name", m.DeviceName).Str("uid", m.DeviceUID).Msg("putting new Hotdrop message")
+	log.Debug().Str("uid", m.DeviceEUI).Msg("putting new Hotdrop message")
 	return nil
 }

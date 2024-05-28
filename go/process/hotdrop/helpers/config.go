@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/setup"
 	"os"
 )
 
@@ -12,7 +13,8 @@ const (
 )
 
 type Config struct {
-	ProjectName string `json:"projectName"`
+	ProjectName string            `json:"projectName"`
+	Sql         setup.MySQLConfig `json:"sql"`
 	Topics      struct {
 		Uplinks  string `json:"uplinks"`
 		Pipeline string `json:"pipeline"`
@@ -20,6 +22,9 @@ type Config struct {
 	Subscriptions struct {
 		Uplinks string `json:"uplinks"`
 	} `json:"subscriptions"`
+	Store struct {
+		Hotdrop bool `json:"hotdrop"`
+	}
 }
 
 // GetConfig creates a config for the specified deployment

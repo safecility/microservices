@@ -1,13 +1,18 @@
 package messages
 
-type Group struct {
-	ID       int64
-	ParentID int64
-	Children []Group
+import (
+	"github.com/safecility/go/lib"
+	"time"
+)
+
+type PowerReading struct {
+	Reading float64
+	Units   string
+	Time    time.Time
 }
 
-type Device struct {
-	DeviceUID  string
-	DeviceName string
-	Group
+type PowerDevice struct {
+	*lib.Device
+	PowerFactor float64 `datastore:",omitempty"`
+	Voltage     float64 `datastore:",omitempty"`
 }

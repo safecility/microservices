@@ -3,7 +3,6 @@ package messages
 import (
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/go/lib"
 	"strings"
 	"time"
 )
@@ -24,7 +23,7 @@ type HotdropReading struct {
 }
 
 type HotdropDeviceReading struct {
-	lib.Device
+	*PowerDevice `datastore:",omitempty"`
 	HotdropReading
 	Time time.Time
 }
@@ -72,9 +71,6 @@ func (m *VuSensorMessage) GetHotDropReadings() (data []HotdropDeviceReading) {
 		eui := strings.ToLower(d.DevEui)
 
 		hdr := HotdropDeviceReading{
-			Device: lib.Device{
-				DeviceUID: eui,
-			},
 			Time: d.ExternalNetworkReceivedAt,
 			HotdropReading: HotdropReading{
 				DeviceEUI: eui,
