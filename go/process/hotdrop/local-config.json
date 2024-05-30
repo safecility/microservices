@@ -1,19 +1,23 @@
 {
   "projectName": "safecility-test",
   "sql": {
-    "user": "editor",
-    "host": "localhost",
-    "port": 3306,
-    "database": "safecility"
+    "config": {
+      "user": "editor",
+      "host": "localhost",
+      "port": 3306,
+      "database": "safecility"
+    },
+    "secret": {
+      "name": "microservice-sql-password",
+      "version": 1
+    }
   },
   "topics": {
     "uplinks": "local-vu-uplinks",
-    "pipeline": "local-power-usage"
+    "hotdrop": "local-hotdrop"
   },
   "subscriptions": {
     "uplinks": "local-vu-uplinks-test"
   },
-  "store": {
-    "hotdrop": false
-  }
+  "pipeAll": true
 }

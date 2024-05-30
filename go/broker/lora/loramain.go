@@ -2,6 +2,7 @@ package main
 
 import (
 	"cloud.google.com/go/pubsub"
+	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"context"
 	"fmt"
 	"github.com/rs/zerolog/log"
@@ -14,7 +15,7 @@ import (
 )
 
 func main() {
-	deployment, isSet := os.LookupEnv("Deployment")
+	deployment, isSet := os.LookupEnv(helpers.OSDeploymentKey)
 	if !isSet {
 		deployment = string(setup.Local)
 	}
@@ -65,14 +66,21 @@ func main() {
 		DownlinkReceipts: downlinkReceiptsTopic,
 	}
 
-	appKeyName := fmt.Sprintf("projects/%s/secrets/dali-lora-key/versions/1", config.ProjectName)
-	appKey := setup.GetSecret(appKeyName)
+	secretsClient, err := secretmanager.NewClient(ctx)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to create secrets client")
+	}
+	secrets := setup.GetNewSecrets(config.ProjectName, secretsClient)
+	appKey, err := secrets.GetSecret(config.Secret)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to get app key")
+	}
 
 	pc := server.MqttProxyConfig{
 		AppID:           config.Mqtt.AppID,
 		Username:        config.Mqtt.Username,
 		MqttAddress:     config.Mqtt.Address,
-		AppKey:          appKey,
+		AppKey:          string(appKey),
 		CanDownlink:     true,
 		GooglePubSub:    daliPubSub,
 		Transformer:     lib.TtnV3{AppID: config.Mqtt.AppID, UidTransformer: helpers.AppIdUidTransformer{AppID: config.Mqtt.AppID}},

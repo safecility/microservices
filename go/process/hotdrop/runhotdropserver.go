@@ -1,10 +1,9 @@
 package main
 
 import (
-	"cloud.google.com/go/datastore"
 	"cloud.google.com/go/pubsub"
+	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"context"
-	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
 	"github.com/safecility/microservices/go/process/hotdrop/helpers"
@@ -32,34 +31,34 @@ func main() {
 		return
 	}
 
-	pipelineTopic := gpsClient.Topic(config.Topics.Pipeline)
-	exists, err := pipelineTopic.Exists(ctx)
-	if !exists {
-		log.Fatal().Str("topic", config.Topics.Pipeline).Msg("no uplink topic")
-	}
-	defer pipelineTopic.Stop()
-
 	uplinksSubscription := gpsClient.Subscription(config.Subscriptions.Uplinks)
-	exists, err = uplinksSubscription.Exists(ctx)
+	exists, err := uplinksSubscription.Exists(ctx)
 	if !exists {
 		log.Fatal().Str("subscription", config.Subscriptions.Uplinks).Msg("no uplinks subscription")
 	}
 
-	dsClient, err := datastore.NewClient(ctx, config.ProjectName)
-	if err != nil {
-		log.Fatal().Err(err).Msg("could not start service")
+	hotdropTopic := gpsClient.Topic(config.Topics.Hotdrop)
+	exists, err = hotdropTopic.Exists(ctx)
+	if !exists {
+		log.Fatal().Str("topic", config.Topics.Hotdrop).Msg("no hotdrop topic")
 	}
-	d, err := store.NewDatastoreHotdrop(dsClient)
-
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not get datastore hotdrop")
+		log.Fatal().Err(err).Str("topic", config.Topics.Hotdrop).Msg("could not get topic")
 	}
+	defer hotdropTopic.Stop()
 
-	sqlSecretName := fmt.Sprintf("projects/%s/secrets/dali-sql-password/versions/1", config.ProjectName)
-	sqlSecret := setup.GetSecret(sqlSecretName)
-	config.Sql.Password = sqlSecret
+	secretsClient, err := secretmanager.NewClient(ctx)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to create secrets client")
+	}
+	sqlSecret := setup.GetNewSecrets(config.ProjectName, secretsClient)
+	password, err := sqlSecret.GetSecret(config.Sql.Secret)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to get secret")
+	}
+	config.Sql.Config.Password = string(password)
 
-	s, err := setup.NewSafecilitySql(config.Sql)
+	s, err := setup.NewSafecilitySql(config.Sql.Config)
 	if err != nil {
 		log.Fatal().Err(err).Msg("could not setup safecility sql")
 	}
@@ -68,7 +67,7 @@ func main() {
 		log.Fatal().Err(err).Msg("could not setup safecility device sql")
 	}
 
-	hotDropServer := server.NewHotDropServer(c, d, uplinksSubscription, pipelineTopic, config.Store.Hotdrop)
+	hotDropServer := server.NewHotDropServer(c, uplinksSubscription, hotdropTopic, config.PipeAll)
 	hotDropServer.Start()
 
 }

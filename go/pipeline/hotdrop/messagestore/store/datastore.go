@@ -4,7 +4,7 @@ import (
 	"cloud.google.com/go/datastore"
 	"context"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/process/hotdrop/messages"
+	"github.com/safecility/microservices/go/pipeline/hotdrop/messagestore/messages"
 )
 
 type DatastoreHotdrop struct {

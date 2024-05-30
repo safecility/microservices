@@ -7,6 +7,10 @@ cloud.google.com/go/auth/oauth2adapt v0.2.2 h1:+TTV8aXpjeChS9M+aTtN/TjdQnzJvmzKF
 cloud.google.com/go/auth/oauth2adapt v0.2.2/go.mod h1:wcYjgpZI9+Yu7LyYBg4pqSiaRkfEK3GQcpb7C/uyF1Q=
 cloud.google.com/go/compute/metadata v0.3.0 h1:Tz+eQXMEqDIKRsmY3cHTL6FVaynIjX2QxYC4trgAKZc=
 cloud.google.com/go/compute/metadata v0.3.0/go.mod h1:zFmK7XCadkQkj6TtorcaGlCW1hT1fIilQDwofLpJ20k=
+cloud.google.com/go/datastore v1.15.0 h1:0P9WcsQeTWjuD1H14JIY7XQscIPQ4Laje8ti96IC5vg=
+cloud.google.com/go/datastore v1.15.0/go.mod h1:GAeStMBIt9bPS7jMJA85kgkpsMkvseWWXiaHya9Jes8=
+cloud.google.com/go/datastore v1.17.0 h1:UEmzuUdyDE58HV2jcb0BoqwCAwsJS2mtHapCsMmhVh0=
+cloud.google.com/go/datastore v1.17.0/go.mod h1:RiRZU0G6VVlIVlv1HRo3vSAPFHULV0ddBNsXO+Sony4=
 cloud.google.com/go/iam v1.1.8 h1:r7umDwhj+BQyz0ScZMp4QrGXjSTI3ZINnpgU2nlB/K0=
 cloud.google.com/go/iam v1.1.8/go.mod h1:GvE6lyMmfxXauzNq8NbgJbeVQNspG+tcdL/W8QO1+zE=
 cloud.google.com/go/kms v1.15.8 h1:szIeDCowID8th2i8XE4uRev5PMxQFqW+JjwYxL9h6xs=
@@ -94,9 +98,13 @@ github.com/redis/go-redis/v9 v9.5.1/go.mod h1:hdY0cQFCN4fnSYT6TkisLufl/4W5UIXyv0
 github.com/rs/xid v1.5.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
 github.com/rs/zerolog v1.33.0 h1:1cU2KZkvPxNyfgEmhHAz/1A9Bz+llsdYzklWFzgp0r8=
 github.com/rs/zerolog v1.33.0/go.mod h1:/7mN4D5sKwJLZQ2b/znpjC3/GQWY/xaDXUM0kKWRHss=
-github.com/safecility/go/lib v0.0.0-20240530172232-844d8e8d360f h1:88pwOtZppwET1rJFCX5FS0UDN4AP2Mtqx5fYxgUf+3s=
+github.com/safecility/go/lib v0.0.0-20240529155320-d8a45a8cb823 h1:dl2xgvILr99Xk7iiALGd5gVCg7Ajpgj4VwHavdew+mo=
+github.com/safecility/go/lib v0.0.0-20240529155320-d8a45a8cb823/go.mod h1:owLQiG2tPskBXrQGEQNUx0AmkihqytX6OyvNUh62B1w=
+github.com/safecility/go/lib v0.0.0-20240530105632-049ee64a63af h1:69gQGXRKCKD/KpaWfq54gVdAISTERPhhELP15uZZGJk=
+github.com/safecility/go/lib v0.0.0-20240530105632-049ee64a63af/go.mod h1:owLQiG2tPskBXrQGEQNUx0AmkihqytX6OyvNUh62B1w=
 github.com/safecility/go/lib v0.0.0-20240530172232-844d8e8d360f/go.mod h1:owLQiG2tPskBXrQGEQNUx0AmkihqytX6OyvNUh62B1w=
-github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f h1:5cDbCNhtnIxQfJyw1eJ6DlzD4qaShftGgHTEOPna2ZQ=
+github.com/safecility/go/setup v0.0.0-20240529155320-d8a45a8cb823 h1:JEawNN1EwNpPFX32t8oC23nqMV4zz7FPYROSiMiK7NI=
+github.com/safecility/go/setup v0.0.0-20240529155320-d8a45a8cb823/go.mod h1:WTdqf02wF9KUSx6SbDTqJhOoZLQUZ84FTd1E+Poq1iE=
 github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f/go.mod h1:WTdqf02wF9KUSx6SbDTqJhOoZLQUZ84FTd1E+Poq1iE=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=

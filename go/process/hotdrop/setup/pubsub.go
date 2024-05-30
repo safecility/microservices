@@ -26,24 +26,14 @@ func main() {
 		log.Fatal().Err(err).Msg("could not setup pubsub")
 	}
 
-	uplinkTopic := gpsClient.Topic(config.Topics.Uplinks)
-	exists, err := uplinkTopic.Exists(ctx)
+	hotdropTopic := gpsClient.Topic(config.Topics.Hotdrop)
+	exists, err := hotdropTopic.Exists(ctx)
 	if !exists {
-		uplinkTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Uplinks)
+		hotdropTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Hotdrop)
 		if err != nil {
 			log.Fatal().Err(err).Msg("setup could not create topic")
 		}
-		log.Info().Str("topic", uplinkTopic.String()).Msg("created topic")
-	}
-
-	deviceStateTopic := gpsClient.Topic(config.Topics.Pipeline)
-	exists, err = deviceStateTopic.Exists(ctx)
-	if !exists {
-		deviceStateTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Pipeline)
-		if err != nil {
-			log.Fatal().Err(err).Msg("setup could not create topic")
-		}
-		log.Info().Str("topic", deviceStateTopic.String()).Msg("created topic")
+		log.Info().Str("topic", hotdropTopic.String()).Msg("created topic")
 	}
 
 	uSubscription := gpsClient.Subscription(config.Subscriptions.Uplinks)
@@ -59,7 +49,7 @@ func main() {
 			log.Info().Str("topic", uTopic.String()).Msg("created topic")
 		}
 
-		r, err := time.ParseDuration("1hr")
+		r, err := time.ParseDuration("1h")
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not parse duration")
 		}

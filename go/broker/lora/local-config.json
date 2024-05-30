@@ -5,6 +5,10 @@
     "username": "v3-prod@ttn",
     "address": "ssl://eu1.cloud.thethings.network:8883"
   },
+  "secret": {
+    "name": "lora-local-secret",
+    "version": 1
+  },
   "topics": {
     "joins": "test-joins-dali",
     "uplinks": "test-dali-bytes",

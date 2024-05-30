@@ -4,6 +4,7 @@ import (
 	"cloud.google.com/go/pubsub"
 	"context"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/setup"
 	"github.com/safecility/microservices/go/broker/lora/helpers"
 	"os"
 	"time"
@@ -11,9 +12,9 @@ import (
 
 func main() {
 
-	deployment, isSet := os.LookupEnv("Deployment")
+	deployment, isSet := os.LookupEnv(helpers.OSDeploymentKey)
 	if !isSet {
-		deployment = string(helpers.Local)
+		deployment = string(setup.Local)
 	}
 	config := helpers.GetConfig(deployment)
 

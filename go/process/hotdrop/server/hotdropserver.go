@@ -14,17 +14,14 @@ import (
 )
 
 type HotDropServer struct {
-	cache        store.DeviceStore
-	store        *store.DatastoreHotdrop
-	sub          *pubsub.Subscription
-	pipeline     *pubsub.Topic
-	storeHotdrop bool
+	cache   store.DeviceStore
+	sub     *pubsub.Subscription
+	hotdrop *pubsub.Topic
+	pipeAll bool
 }
 
-func NewHotDropServer(cache store.DeviceStore, store *store.DatastoreHotdrop,
-	sub *pubsub.Subscription, topic *pubsub.Topic, storeHotdrop bool) HotDropServer {
-
-	return HotDropServer{sub: sub, cache: cache, store: store, pipeline: topic, storeHotdrop: storeHotdrop}
+func NewHotDropServer(cache store.DeviceStore, sub *pubsub.Subscription, hotdrop *pubsub.Topic, pipeAll bool) HotDropServer {
+	return HotDropServer{sub: sub, cache: cache, hotdrop: hotdrop, pipeAll: pipeAll}
 }
 
 func (es *HotDropServer) Start() {
@@ -56,28 +53,14 @@ func (es *HotDropServer) receive() {
 				if err != nil {
 					log.Warn().Err(err).Str("uid", r.DeviceEUI).Msg("could not get device")
 				}
-				if pd != nil {
-					r.PowerDevice = pd
-				}
+				r.PowerDevice = pd
 			}
-
-			//if we don't have an admin device we can still save hotdrop messages
-			if es.storeHotdrop {
-				go func() {
-					crr := es.store.AddHotdropMessage(&r)
-					if crr != nil {
-						log.Err(crr).Msg("could not add hotdrop data")
-					}
-				}()
-			}
-
-			// if we aren't tracking the device move to next
-			if pd == nil {
+			if r.PowerDevice == nil && !es.pipeAll {
+				log.Debug().Str("device", r.DeviceEUI).Msg("no device in cache and pipeAll == false")
 				continue
 			}
 
-			u := messages.GetPowerUsage(r, pd)
-			topic, err := stream.PublishToTopic(u, es.pipeline)
+			topic, err := stream.PublishToTopic(r, es.hotdrop)
 			if err != nil {
 				log.Err(err).Msg("could not publish usage to topic")
 				continue

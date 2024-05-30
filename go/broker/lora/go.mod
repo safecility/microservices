@@ -4,10 +4,11 @@ go 1.21
 
 require (
 	cloud.google.com/go/pubsub v1.38.0
+	cloud.google.com/go/secretmanager v1.13.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240524151348-a858faa9cc42
-	github.com/safecility/go/mqtt v0.0.0-20240524151348-a858faa9cc42
-	github.com/safecility/go/setup v0.0.0-20240524151348-a858faa9cc42
+	github.com/safecility/go/lib v0.0.0-20240530172232-844d8e8d360f
+	github.com/safecility/go/mqtt v0.0.0-20240530172232-844d8e8d360f
+	github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f
 )
 
 require (
@@ -16,7 +17,6 @@ require (
 	cloud.google.com/go/auth/oauth2adapt v0.2.2 // indirect
 	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	cloud.google.com/go/iam v1.1.8 // indirect
-	cloud.google.com/go/secretmanager v1.13.1 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect

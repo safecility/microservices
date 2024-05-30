@@ -1,14 +1,18 @@
 {
-  "appID": "v3-prod",
-  "username": "v3-prod@ttn",
+  "appID": "**some-app-id**",
+  "username": "**some-app-username**",
   "projectName": "safecility-prod",
   "mqttAddress": "eu1.cloud.thethings.network:1883",
+  "secret": {
+    "name": "lora-prod-secret",
+    "version": 1
+  },
   "topics": {
-    "joins": "prod-joins-dali",
-    "uplinks": "prod-dali-bytes",
-    "downlinkReceipts": "prod-dali-downlink-receipts"
+    "joins": "prod-joins",
+    "uplinks": "prod-uplinks",
+    "downlinkReceipts": "prod-downlink-receipts"
   },
   "subscriptions": {
-    "downlinks": "prod-ttn-dali-downlink-sub"
+    "downlinks": "prod-ttn-downlink-sub"
   }
 }

@@ -1,0 +1,16 @@
+{
+  "projectName": "safecility-test",
+  "topics": {
+    "hotdrop": "local-hotdrop",
+    "bigquery": "local-bigquery"
+  },
+  "subscriptions": {
+    "hotdrop": "local-hotdrop-sub"
+  },
+  "schema": {
+    "name": "bigquery-hotdrop",
+    "filePath": "./protobuffer/hotdrop.proto"
+  },
+  "storeAll": false,
+  "table": "hotdrop"
+}

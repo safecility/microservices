@@ -13,19 +13,21 @@ const (
 )
 
 type Config struct {
-	ProjectName string `json:"projectName"`
-	Sql         struct {
-		Config setup.MySQLConfig `json:"config"`
-		Secret setup.Secret      `json:"secret"`
-	} `json:"sql"`
-	Topics struct {
-		Uplinks string `json:"uplinks"`
-		Hotdrop string `json:"hotdrop"`
+	ProjectName string            `json:"projectName"`
+	Sql         setup.MySQLConfig `json:"sql"`
+	Topics      struct {
+		Uplinks  string `json:"uplinks"`
+		Pipeline struct{
+			Hotdrop  string `json:"hotdrop"`
+			Usage    string `json:"usage"`
+		} `json:"pipeline"`
 	} `json:"topics"`
 	Subscriptions struct {
 		Uplinks string `json:"uplinks"`
 	} `json:"subscriptions"`
-	PipeAll bool `json:"pipeAll"`
+	Store struct {
+		Hotdrop bool `json:"hotdrop"`
+	}
 }
 
 // GetConfig creates a config for the specified deployment

@@ -1,4 +1,4 @@
-module github.com/safecility/microservices/go/broker/vutility
+module github.com/safecility/microservices/go/pipeline/hotdrop/bigquery
 
 go 1.21
 
@@ -6,10 +6,10 @@ toolchain go1.21.4
 
 require (
 	cloud.google.com/go/pubsub v1.38.0
-	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/rs/zerolog v1.33.0
 	github.com/safecility/go/lib v0.0.0-20240530172232-844d8e8d360f
 	github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f
+	google.golang.org/protobuf v1.34.1
 )
 
 require (
@@ -26,6 +26,7 @@ require (
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
@@ -52,5 +53,4 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434 // indirect
 	google.golang.org/grpc v1.63.2 // indirect
-	google.golang.org/protobuf v1.34.1 // indirect
 )

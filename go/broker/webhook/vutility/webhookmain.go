@@ -2,8 +2,8 @@ package main
 
 import (
 	"cloud.google.com/go/pubsub"
+	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"context"
-	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
 	"github.com/safecility/go/setup"
@@ -19,10 +19,17 @@ func main() {
 	}
 	config := helpers.GetConfig(deployment)
 
-	jwtSecretName := fmt.Sprintf("projects/%s/secrets/jwt-key/versions/1", config.ProjectName)
-	jwtSecret := setup.GetSecret(jwtSecretName)
-
 	ctx := context.Background()
+	secretsClient, err := secretmanager.NewClient(ctx)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to create secrets client")
+	}
+	secrets := setup.GetNewSecrets(config.ProjectName, secretsClient)
+	jwtSecret, err := secrets.GetSecret(config.Secret)
+	if err != nil {
+		log.Fatal().Err(err).Msg("Failed to get secret")
+	}
+
 	psClient, err := pubsub.NewClient(ctx, config.ProjectName)
 	if err != nil {
 		log.Fatal().Err(err).Msg("could not start service")
@@ -35,7 +42,7 @@ func main() {
 		log.Fatal().Err(err).Str("name", config.Topics.Uplinks).Msg("topic does not exist or error")
 	}
 
-	jwtParser := lib.NewJWTParser(jwtSecret)
+	jwtParser := lib.NewJWTParser(string(jwtSecret))
 
 	s := server.NewVutilityServer(&jwtParser, uplinksTopic)
 

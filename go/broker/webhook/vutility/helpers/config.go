@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/setup"
 	"os"
 )
 
@@ -12,6 +13,7 @@ type Config struct {
 	Topics      struct {
 		Uplinks string `json:"uplinks"`
 	} `json:"topics"`
+	Secret setup.Secret `json:"secret"`
 }
 
 // GetConfig for Vutility

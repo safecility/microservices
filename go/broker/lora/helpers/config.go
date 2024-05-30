@@ -4,7 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/setup"
 	"os"
+)
+
+const (
+	OSDeploymentKey = "LORA_DEPLOYMENT"
 )
 
 type MqttConfig struct {
@@ -16,6 +21,7 @@ type MqttConfig struct {
 type Config struct {
 	ProjectName string `json:"projectName"`
 	Mqtt        MqttConfig
+	Secret      setup.Secret `json:"secret"`
 	Topics      struct {
 		Joins            string `json:"joins"`
 		Uplinks          string `json:"uplinks"`
