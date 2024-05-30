@@ -1,6 +1,6 @@
 ### Data Brokers
 
-Brokers are lightweight pipes between device Data Brokers (NBIoT, LoRA and webhook) and our microservices.
+Brokers are lightweight pipes between device Data Brokers (NBIoT, LoRA and webhooks) and our microservices.
 
 The purpose of the broker is to separate Payload processing from the transport.
 All brokers create identical messages for processing by microservices
@@ -31,5 +31,5 @@ type LoraMessage struct {
 }
 ```
 
-now microservices can access the SimpleMessage as usual 
+Now microservices can access the SimpleMessage as usual 
 and a microservice with knowledge of the specific transport mechanism can parse the necessary fields
