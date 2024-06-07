@@ -1,8 +1,8 @@
-### LoRA broker
+### LoRA transport
 
-This Broker pipes messages from a MQTT data source to a GCloud pubsub
+This Transport pipes messages from a MQTT data source to a GCloud pubsub
 
-The Broker also listens for Downlink messages and republishes downlink ACK, CONFIRMED etc
+The Transport also listens for Downlink messages and republishes downlink ACK, CONFIRMED etc
 
 Config files have the form:
 

@@ -23,12 +23,19 @@ func main() {
 	config := helpers.GetConfig(deployment)
 
 	gpsClient, err := pubsub.NewClient(ctx, config.ProjectName)
+	defer func(gpsClient *pubsub.Client) {
+		err := gpsClient.Close()
+		if err != nil {
+			log.Err(err).Msg("Error closing pubsub client")
+		}
+	}(gpsClient)
+
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create pubsub client")
 	}
 	if gpsClient == nil {
 		log.Fatal().Err(err).Msg("Failed to create pubsub client")
-		return
+		return // this is here so golang doesn't complain about gpsClient being nil
 	}
 
 	hotdropSubscription := gpsClient.Subscription(config.Subscriptions.Hotdrop)
