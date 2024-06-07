@@ -16,6 +16,9 @@ type MqttConfig struct {
 	AppID    string `json:"appID"`
 	Username string `json:"username"`
 	Address  string `json:"address"`
+	Downlink bool   `json:"downlink"`
+	Location bool   `json:"location"`
+	Signal   bool   `json:"signal"`
 }
 
 type Config struct {
@@ -27,6 +30,8 @@ type Config struct {
 		Uplinks          string `json:"uplinks"`
 		Downlinks        string `json:"downlinks"`
 		DownlinkReceipts string `json:"downlinkReceipts"`
+		Location         string `json:"location"`
+		Signal           string `json:"signal"`
 	} `json:"topics"`
 	Subscriptions struct {
 		Downlinks string `json:"downlinks"`

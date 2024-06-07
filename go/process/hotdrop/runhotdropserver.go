@@ -51,6 +51,12 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create secrets client")
 	}
+	defer func(secretsClient *secretmanager.Client) {
+		err := secretsClient.Close()
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to close secrets client")
+		}
+	}(secretsClient)
 	sqlSecret := setup.GetNewSecrets(config.ProjectName, secretsClient)
 	password, err := sqlSecret.GetSecret(config.Sql.Secret)
 	if err != nil {

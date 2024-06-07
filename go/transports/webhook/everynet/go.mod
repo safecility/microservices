@@ -1,4 +1,4 @@
-module github.com/safecility/microservices/go/transports/vutility
+module github.com/safecility/microservices/go/transports/everynet
 
 go 1.21
 
@@ -9,7 +9,8 @@ require (
 	cloud.google.com/go/secretmanager v1.13.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240530172232-844d8e8d360f
+	github.com/safecility/go/lib v0.0.0-20240607150417-c72d5d45d7ea
+	github.com/safecility/go/mqtt v0.0.0-20240530172232-844d8e8d360f
 	github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f
 )
 
@@ -51,6 +52,6 @@ require (
 	google.golang.org/genproto v0.0.0-20240401170217-c3f982113cda // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434 // indirect
-	google.golang.org/grpc v1.63.2 // indirect
+	google.golang.org/grpc v1.64.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 )

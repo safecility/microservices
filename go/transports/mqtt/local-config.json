@@ -1,0 +1,20 @@
+{
+  "projectName": "safecility-test",
+  "mqtt": {
+    "appID": "v3-prod",
+    "username": "v3-prod@ttn",
+    "address": "ssl://eu1.cloud.thethings.network:8883",
+    "downlink": false,
+    "location": false,
+    "signal": true
+  },
+  "secret": {
+    "name": "lora-local-secret",
+    "version": 1
+  },
+  "topics": {
+    "joins": "test-mqtt-joins",
+    "uplinks": "test-mqtt-bytes",
+    "signal": "test-mqtt-signal"
+  }
+}

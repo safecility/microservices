@@ -8,18 +8,27 @@ import (
 	"os"
 )
 
+const (
+	OSDeploymentKey = "HOTDROP_DEPLOYMENT"
+)
+
 type Config struct {
 	ProjectName string `json:"projectName"`
-	Topics      struct {
-		Uplinks          string `json:"uplinks"`
-		DownlinkReceipts string `json:"downlinkReceipts"`
-		Signal           string `json:"signal"`
-		Location         string `json:"location"`
+	Sql         struct {
+		Config setup.MySQLConfig `json:"config"`
+		Secret setup.Secret      `json:"secret"`
+	} `json:"sql"`
+	Topics struct {
+		Uplinks string `json:"uplinks"`
+		Hotdrop string `json:"hotdrop"`
 	} `json:"topics"`
-	Secret setup.Secret `json:"secret"`
+	Subscriptions struct {
+		Uplinks string `json:"uplinks"`
+	} `json:"subscriptions"`
+	PipeAll bool `json:"pipeAll"`
 }
 
-// GetConfig for Vutility
+// GetConfig creates a config for the specified deployment
 func GetConfig(deployment string) *Config {
 	fileName := fmt.Sprintf("%s-config.json", deployment)
 

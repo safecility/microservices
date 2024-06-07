@@ -6,7 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
 	"github.com/safecility/go/lib/stream"
-	"github.com/safecility/microservices/go/broker/vutility/messages"
+	"github.com/safecility/microservices/go/transports/vutility/messages"
 	"io"
 	"net/http"
 	"os"

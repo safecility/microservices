@@ -5,7 +5,7 @@ import (
 	"context"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/broker/lora/helpers"
+	"github.com/safecility/microservices/go/transports/mqtt/helpers"
 	"os"
 	"time"
 )

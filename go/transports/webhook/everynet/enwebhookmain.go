@@ -7,8 +7,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/broker/vutility/helpers"
-	"github.com/safecility/microservices/go/broker/vutility/server"
+	"github.com/safecility/microservices/go/transports/everynet/helpers"
+	"github.com/safecility/microservices/go/transports/everynet/server"
 	"os"
 )
 
@@ -32,8 +32,14 @@ func main() {
 
 	psClient, err := pubsub.NewClient(ctx, config.ProjectName)
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not start service")
+		log.Fatal().Err(err).Msg("could not get pubsub client")
 	}
+	defer func(psClient *pubsub.Client) {
+		err := psClient.Close()
+		if err != nil {
+			log.Err(err).Msg("Failed to close pubsub client")
+		}
+	}(psClient)
 
 	uplinksTopic := psClient.Topic(config.Topics.Uplinks)
 
@@ -44,7 +50,7 @@ func main() {
 
 	jwtParser := lib.NewJWTParser(string(jwtSecret))
 
-	s := server.NewVutilityServer(&jwtParser, uplinksTopic)
+	s := server.NewEverynetServer(&jwtParser, uplinksTopic)
 
 	s.Start()
 }

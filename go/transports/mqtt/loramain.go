@@ -9,7 +9,7 @@ import (
 	"github.com/safecility/go/mqtt/lib"
 	"github.com/safecility/go/mqtt/server"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/broker/lora/helpers"
+	"github.com/safecility/microservices/go/transports/mqtt/helpers"
 	"net/http"
 	"os"
 )
@@ -39,12 +39,6 @@ func main() {
 	}
 	defer uplinkTopic.Stop()
 
-	sub := gpsClient.Subscription(config.Subscriptions.Downlinks)
-	exists, err = sub.Exists(ctx)
-	if !exists {
-		log.Fatal().Str("subscription", config.Subscriptions.Downlinks).Msg("no downlink subscription")
-	}
-
 	joinsTopic := gpsClient.Topic(config.Topics.Joins)
 	exists, err = joinsTopic.Exists(ctx)
 	if !exists {
@@ -52,18 +46,27 @@ func main() {
 	}
 	defer joinsTopic.Stop()
 
-	downlinkReceiptsTopic := gpsClient.Topic(config.Topics.DownlinkReceipts)
-	exists, err = downlinkReceiptsTopic.Exists(ctx)
-	if !exists {
-		log.Fatal().Str("topic", config.Topics.DownlinkReceipts).Msg("no downlinkReceipts topic")
+	gPubSub := server.GooglePubSub{
+		Joins:   joinsTopic,
+		Uplinks: uplinkTopic,
 	}
-	defer downlinkReceiptsTopic.Stop()
 
-	daliPubSub := server.GooglePubSub{
-		Joins:            joinsTopic,
-		Uplinks:          uplinkTopic,
-		Downlinks:        sub,
-		DownlinkReceipts: downlinkReceiptsTopic,
+	if config.Mqtt.Downlink {
+
+		downlinksSubscription := gpsClient.Subscription(config.Subscriptions.Downlinks)
+		exists, err = downlinksSubscription.Exists(ctx)
+		if !exists {
+			log.Fatal().Str("subscription", config.Subscriptions.Downlinks).Msg("no downlink subscription")
+		}
+		gPubSub.Downlinks = downlinksSubscription
+
+		downlinkReceiptsTopic := gpsClient.Topic(config.Topics.DownlinkReceipts)
+		exists, err = downlinkReceiptsTopic.Exists(ctx)
+		if !exists {
+			log.Fatal().Str("topic", config.Topics.DownlinkReceipts).Msg("no downlinkReceipts topic")
+		}
+		defer downlinkReceiptsTopic.Stop()
+		gPubSub.DownlinkReceipts = downlinkReceiptsTopic
 	}
 
 	secretsClient, err := secretmanager.NewClient(ctx)
@@ -82,7 +85,7 @@ func main() {
 		MqttAddress:     config.Mqtt.Address,
 		AppKey:          string(appKey),
 		CanDownlink:     true,
-		GooglePubSub:    daliPubSub,
+		GooglePubSub:    gPubSub,
 		Transformer:     lib.TtnV3{AppID: config.Mqtt.AppID, UidTransformer: helpers.AppIdUidTransformer{AppID: config.Mqtt.AppID}},
 		PayloadAdjuster: helpers.SimpleDaliPayloadAdjuster{},
 	}

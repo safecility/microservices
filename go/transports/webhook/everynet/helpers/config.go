@@ -19,7 +19,7 @@ type Config struct {
 	Secret setup.Secret `json:"secret"`
 }
 
-// GetConfig for Vutility
+// GetConfig for Everynet
 func GetConfig(deployment string) *Config {
 	fileName := fmt.Sprintf("%s-config.json", deployment)
 

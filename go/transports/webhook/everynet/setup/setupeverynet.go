@@ -9,20 +9,20 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/transports/vutility/helpers"
+	"github.com/safecility/microservices/go/transports/everynet/helpers"
 	"os"
 	"time"
 )
 
+// main setup pubsub and output a jwt token to be used by everynet webhook
 func main() {
 	deployment, isSet := os.LookupEnv("Deployment")
 	if !isSet {
 		deployment = string(setup.Local)
 	}
-
-	ctx := context.Background()
 	config := helpers.GetConfig(deployment)
 
+	ctx := context.Background()
 	secretsClient, err := secretmanager.NewClient(ctx)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to create secrets client")
@@ -40,7 +40,19 @@ func main() {
 
 	hmacSecret := sig.Sum(nil)
 
-	tokenString, err := getTokenString(hmacSecret)
+	now := time.Now()
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"service": "everynet",
+		"created": now.Format(time.RFC3339),
+	})
+
+	// Sign and get the complete encoded token as a string using the secret
+	tokenString, err := token.SignedString(hmacSecret)
+	if err != nil {
+		log.Error().Err(err).Msg("could not generate token")
+		return
+	}
 
 	fo, err := os.Create("jwt.txt")
 	if err != nil {
@@ -57,40 +69,22 @@ func main() {
 	} else {
 		log.Info().Msgf("wrote %d bytes", write)
 	}
-}
 
-func getTokenString(hmacSecret []byte) (string, error) {
-	now := time.Now()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"service": "vutility",
-		"created": now.Format(time.RFC3339),
+	token, err = jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return hmacSecret, nil
 	})
 
-	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString(hmacSecret)
-	if err != nil {
-		return "", err
-	}
-
-	// check we can parse before exit
-	token, err = jwt.Parse(tokenString,
-		func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-			}
-			return hmacSecret, nil
-		},
-	)
-
 	if token == nil || !token.Valid {
-		return "", fmt.Errorf("invalid token")
+		log.Error().Err(err).Msg("invalid token")
+		return
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		fmt.Println(claims["service"], claims["created"])
+		fmt.Println("token OK", claims["service"], claims["created"])
 	} else {
-		return "", fmt.Errorf("invalid claims")
+		fmt.Println(err)
 	}
-
-	return tokenString, nil
 }

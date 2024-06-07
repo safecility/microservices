@@ -1,0 +1,10 @@
+{
+  "projectName": "safecility-test",
+  "topics": {
+    "uplinks": "local-en-uplinks"
+  },
+  "secret": {
+    "name": "jwt-key",
+    "version": 1
+  }
+}
