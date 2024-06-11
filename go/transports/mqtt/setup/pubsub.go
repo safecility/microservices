@@ -33,24 +33,6 @@ func main() {
 			log.Fatal().Err(err).Msg("setup could not create topic")
 		}
 	}
-	downlinksSub := gpsClient.Subscription(config.Subscriptions.Downlinks)
-	exists, err = downlinksSub.Exists(ctx)
-	if !exists {
-		downlinksTopic := gpsClient.Topic(config.Topics.Downlinks)
-		exists, err = downlinksTopic.Exists(ctx)
-		if !exists {
-			downlinksTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Downlinks)
-			if err != nil {
-				log.Fatal().Err(err).Msg("setup could not create topic")
-			}
-		}
-
-		subConfig := getSubscriptionConfig(downlinksTopic)
-		downlinksSub, err = gpsClient.CreateSubscription(ctx, config.Subscriptions.Downlinks, subConfig)
-		if err != nil {
-			log.Fatal().Err(err).Msg("setup could not create subscription")
-		}
-	}
 
 	joinsTopic := gpsClient.Topic(config.Topics.Joins)
 	exists, err = joinsTopic.Exists(ctx)
@@ -61,10 +43,32 @@ func main() {
 		}
 	}
 
-	downlinkReceiptsTopic := gpsClient.Topic(config.Topics.DownlinkReceipts)
-	exists, err = downlinkReceiptsTopic.Exists(ctx)
-	if !exists {
-		downlinkReceiptsTopic, err = gpsClient.CreateTopic(ctx, config.Topics.DownlinkReceipts)
+	if config.Mqtt.Downlink {
+		downlinksSub := gpsClient.Subscription(config.Subscriptions.Downlinks)
+		exists, err = downlinksSub.Exists(ctx)
+		if !exists {
+			downlinksTopic := gpsClient.Topic(config.Topics.Downlinks)
+			exists, err = downlinksTopic.Exists(ctx)
+			if !exists {
+				downlinksTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Downlinks)
+				if err != nil {
+					log.Fatal().Err(err).Msg("setup could not create topic")
+				}
+			}
+
+			subConfig := getSubscriptionConfig(downlinksTopic)
+			downlinksSub, err = gpsClient.CreateSubscription(ctx, config.Subscriptions.Downlinks, subConfig)
+			if err != nil {
+				log.Fatal().Err(err).Msg("setup could not create subscription")
+			}
+		}
+
+		downlinkReceiptsTopic := gpsClient.Topic(config.Topics.DownlinkReceipts)
+		exists, err = downlinkReceiptsTopic.Exists(ctx)
+		if !exists {
+			downlinkReceiptsTopic, err = gpsClient.CreateTopic(ctx, config.Topics.DownlinkReceipts)
+		}
+
 	}
 
 	log.Info().Msg("finished setup")
