@@ -27,6 +27,9 @@ Config files have the form:
 ```
 
 ### TODO
+
+Main thing is that the MqttProxyConfig needs to be configurable - ATM it uses a set Transformer and PayloadAdjuster
+
 we will align all the lora transports - both mqtt and webhook to provide the same data
 
 in addition to the current paths we will provide signal and location topics to publish to for analysis

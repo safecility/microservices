@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/safecility/microservices/go/process/hotdrop/messages"
+	"github.com/safecility/microservices/go/device/hotdrop/process/messages"
 )
 
 type DeviceStore interface {

@@ -4,12 +4,13 @@ import (
 	"database/sql"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
-	"github.com/safecility/microservices/go/process/hotdrop/messages"
+	"github.com/safecility/microservices/go/device/hotdrop/process/messages"
 )
 
-// TODO adjust locationId when changed on local db
+// TODO adjust move to the new group UIDs when db is updated
 const (
-	getDeviceStmt = `SELECT name, uid, locationId as groupId, companyId, power_factor, line_voltage
+	getDeviceStmt = `SELECT uid as DeviceUID, name as DeviceName, tag as DeviceTag, 
+       groupUID, companyUID, parentUID, power_factor, line_voltage
 		FROM device
 		JOIN safecility.power_device p on device.id = p.deviceId
 		WHERE type='power' AND device.uid = ?`
@@ -19,7 +20,6 @@ const (
 type DeviceSql struct {
 	sqlDB          *sql.DB
 	getDeviceByUID *sql.Stmt
-	getDaliStatus  *sql.Stmt
 }
 
 func NewDeviceSql(db *sql.DB) (*DeviceSql, error) {
@@ -53,26 +53,34 @@ type rowScanner interface {
 
 func scanDevice(s rowScanner) (*messages.PowerDevice, error) {
 	var (
-		name        sql.NullString
 		uid         sql.NullString
-		groupID     sql.NullInt64
-		companyID   sql.NullInt64
+		name        sql.NullString
+		tag         sql.NullString
+		groupUID    sql.NullString
+		companyUID  sql.NullString
+		parentUID   sql.NullString
 		voltage     sql.NullFloat64
 		powerFactor sql.NullFloat64
 	)
 
-	err := s.Scan(&name, &uid, &groupID, &companyID, &powerFactor, &voltage)
+	err := s.Scan(&uid, &name, &tag, &groupUID, &companyUID, &parentUID, &powerFactor, &voltage)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
 		return nil, err
 	}
 
 	deviceInfo := messages.PowerDevice{
 		Device: &lib.Device{
-			DeviceUID:  uid.String,
-			DeviceName: name.String,
-			CompanyID:  companyID.Int64,
+			DeviceUID: uid.String,
+			DeviceMeta: &lib.DeviceMeta{
+				DeviceName: name.String,
+				DeviceTag:  tag.String,
+			},
 			Group: &lib.Group{
-				GroupID: groupID.Int64,
+				GroupUID:   groupUID.String,
+				CompanyUID: companyUID.String,
 			},
 		},
 		PowerFactor: powerFactor.Float64,

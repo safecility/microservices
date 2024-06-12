@@ -5,7 +5,7 @@ import (
 	"context"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/pipeline/hotdrop/bigquery/helpers"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/bigquery/helpers"
 	"os"
 )
 

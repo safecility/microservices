@@ -28,6 +28,9 @@ func NewEverynetServer(jwtParser *lib.JWTParser, uplinks *pubsub.Topic) Everynet
 // Start listen at the given port for /vutility messages
 func (en *EverynetServer) Start() {
 	handler := http.HandlerFunc(en.handleRequest)
+
+	http.Handle("/eastron", handler)
+	//if we're allowed hotdrop raw messages with firmware
 	http.Handle("/vutility", handler)
 
 	port, e := os.LookupEnv("PORT")
@@ -38,25 +41,6 @@ func (en *EverynetServer) Start() {
 	if err != nil {
 		log.Fatal().Msg(fmt.Sprintf("could not start http: %v", err))
 	}
-}
-
-func (en *EverynetServer) handleAuth(r *http.Request) error {
-	auth := r.Header.Get("Authorization")
-	log.Debug().Interface("header", auth).Msg("auth")
-
-	if auth == "" || len(auth) < len(bearerPrefix) {
-		return fmt.Errorf("invalid authorization header")
-	}
-	token := auth[len(bearerPrefix):]
-
-	claims, err := en.jwtParser.ParseToken(token)
-	if err != nil {
-		log.Err(err).Msg("could not parse token")
-		return err
-	}
-	// for the moment we're not interested in the claims
-	_ = claims
-	return nil
 }
 
 func (en *EverynetServer) handleRequest(w http.ResponseWriter, r *http.Request) {
@@ -118,8 +102,8 @@ func (en *EverynetServer) handleLoraMessage(enMessage messages.ENMessage) error 
 
 		sm := &stream.SimpleMessage{
 			BrokerDevice: stream.BrokerDevice{
-				Source:    "",
-				DeviceUID: "",
+				Source:    "everynet",
+				DeviceUID: enMessage.Meta.Device,
 			},
 			Payload: []byte(uplink.Payload),
 			Time:    now,
@@ -144,5 +128,24 @@ func (en *EverynetServer) handleLoraMessage(enMessage messages.ENMessage) error 
 	default:
 		log.Warn().Str("infoType", string(enMessage.Type)).Interface("default", enMessage).Msg("everynet unhandled infoType")
 	}
+	return nil
+}
+
+func (en *EverynetServer) handleAuth(r *http.Request) error {
+	auth := r.Header.Get("Authorization")
+	log.Debug().Interface("header", auth).Msg("auth")
+
+	if auth == "" || len(auth) < len(bearerPrefix) {
+		return fmt.Errorf("invalid authorization header")
+	}
+	token := auth[len(bearerPrefix):]
+
+	claims, err := en.jwtParser.ParseToken(token)
+	if err != nil {
+		log.Err(err).Msg("could not parse token")
+		return err
+	}
+	// for the moment we're not interested in the claims
+	_ = claims
 	return nil
 }

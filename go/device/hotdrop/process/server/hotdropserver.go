@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/stream"
-	"github.com/safecility/microservices/go/process/hotdrop/messages"
-	"github.com/safecility/microservices/go/process/hotdrop/store"
+	"github.com/safecility/microservices/go/device/hotdrop/process/messages"
+	"github.com/safecility/microservices/go/device/hotdrop/process/store"
 	"net/http"
 	"os"
 )

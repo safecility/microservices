@@ -1,0 +1,10 @@
+{
+  "projectName": "safecility-test",
+  "topics": {
+    "eastron": "local-milesite"
+  },
+  "subscriptions": {
+    "eastron": "local-milesite-sub"
+  },
+  "storeAll": false
+}

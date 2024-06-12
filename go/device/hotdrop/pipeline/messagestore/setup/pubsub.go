@@ -6,7 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/stream"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/pipeline/hotdrop/messagestore/helpers"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/messagestore/helpers"
 	"os"
 	"time"
 )

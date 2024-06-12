@@ -1,7 +1,7 @@
 {
   "projectName": "safecility-test",
   "topics": {
-    "uplinks": "local-en-uplinks"
+    "uplinks": "local-eastron-uplinks"
   },
   "secret": {
     "name": "jwt-key",

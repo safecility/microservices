@@ -6,9 +6,9 @@ import (
 	"context"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/pipeline/hotdrop/messagestore/helpers"
-	"github.com/safecility/microservices/go/pipeline/hotdrop/messagestore/server"
-	"github.com/safecility/microservices/go/pipeline/hotdrop/messagestore/store"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/messagestore/helpers"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/messagestore/server"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/messagestore/store"
 	"os"
 )
 

@@ -4,7 +4,7 @@ import (
 	"cloud.google.com/go/datastore"
 	"context"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/pipeline/hotdrop/messagestore/messages"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/messagestore/messages"
 )
 
 type DatastoreHotdrop struct {
@@ -16,6 +16,7 @@ func NewDatastoreHotdrop(client *datastore.Client) (*DatastoreHotdrop, error) {
 	return rd, nil
 }
 
+// AddHotdropMessage TODO store a single value from the hot mess hotdrop units
 func (d *DatastoreHotdrop) AddHotdropMessage(m *messages.HotdropDeviceReading) error {
 	ctx := context.Background()
 	k := datastore.IncompleteKey("Hotdrop", nil)

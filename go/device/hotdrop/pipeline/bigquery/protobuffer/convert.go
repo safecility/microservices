@@ -1,7 +1,7 @@
 package protobuffer
 
 import (
-	"github.com/safecility/microservices/go/pipeline/hotdrop/bigquery/messages"
+	"github.com/safecility/microservices/go/device/hotdrop/pipeline/bigquery/messages"
 	"time"
 )
 

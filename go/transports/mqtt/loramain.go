@@ -79,6 +79,7 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to get app key")
 	}
 
+	//TODO this changes depending on the message - make it configurable
 	pc := server.MqttProxyConfig{
 		AppID:           config.Mqtt.AppID,
 		Username:        config.Mqtt.Username,
@@ -87,7 +88,7 @@ func main() {
 		CanDownlink:     true,
 		GooglePubSub:    gPubSub,
 		Transformer:     lib.TtnV3{AppID: config.Mqtt.AppID, UidTransformer: helpers.AppIdUidTransformer{AppID: config.Mqtt.AppID}},
-		PayloadAdjuster: helpers.SimpleDaliPayloadAdjuster{},
+		PayloadAdjuster: lib.IdentityAdjuster{},
 	}
 
 	p, err := server.NewPahoProxy(pc)

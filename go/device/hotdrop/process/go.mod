@@ -1,4 +1,4 @@
-module github.com/safecility/microservices/go/process/hotdrop
+module github.com/safecility/microservices/go/device/hotdrop/process
 
 go 1.21
 
@@ -8,8 +8,8 @@ require (
 	cloud.google.com/go/pubsub v1.38.0
 	cloud.google.com/go/secretmanager v1.13.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240607154519-49e765b402aa
-	github.com/safecility/go/setup v0.0.0-20240607154519-49e765b402aa
+	github.com/safecility/go/lib v0.0.0-20240611085705-73f14e1faf61
+	github.com/safecility/go/setup v0.0.0-20240611085705-73f14e1faf61
 )
 
 require (
