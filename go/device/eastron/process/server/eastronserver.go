@@ -48,6 +48,7 @@ func (es *EastronServer) receive() {
 		}
 		// the eastron uid is not actually very useful
 		eastronReading.UID = sm.DeviceUID
+		eastronReading.Time = sm.Time
 
 		log.Debug().Str("eui", sm.DeviceUID).Msg("eastron message")
 		var pd *lib.Device

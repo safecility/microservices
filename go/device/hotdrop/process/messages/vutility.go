@@ -54,7 +54,7 @@ type VuSensorMessage struct {
 	} `json:"data"`
 }
 
-func (m *VuSensorMessage) GetHotDropReadings() (data []HotdropDeviceReading) {
+func (m *VuSensorMessage) GetHotdropDeviceReadings() (data []HotdropDeviceReading) {
 
 	dataMap := make(map[string]int, len(m.Data))
 

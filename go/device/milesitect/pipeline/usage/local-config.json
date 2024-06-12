@@ -1,0 +1,11 @@
+{
+  "projectName": "safecility-test",
+  "topics": {
+    "milesite": "local-milesite",
+    "usage": "local-power-usage"
+  },
+  "subscriptions": {
+    "milesite": "local-milesite-usage-sub"
+  },
+  "storeAll": false
+}

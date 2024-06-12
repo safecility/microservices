@@ -6,6 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
 	"math"
+	"time"
 )
 
 type EastronReading struct {
@@ -18,6 +19,7 @@ type EastronReading struct {
 	InstantaneousVoltage float64
 	PowerFactor          float64
 	RelayState           float64
+	Time                 time.Time
 }
 
 func ReadEastronInfo(payload []byte) (*EastronReading, error) {

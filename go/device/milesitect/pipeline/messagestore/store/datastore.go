@@ -16,7 +16,7 @@ func NewDatastoreMilesite(client *datastore.Client) (*DatastoreMilesite, error) 
 	return rd, nil
 }
 
-func (d *DatastoreMilesite) AddEastronMessage(m *messages.MilesiteCTReading) error {
+func (d *DatastoreMilesite) AddMilesiteMessage(m *messages.MilesiteCTReading) error {
 	ctx := context.Background()
 	k := datastore.IncompleteKey("MilesiteCT", nil)
 	k, err := d.client.Put(ctx, k, m)

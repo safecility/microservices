@@ -1,15 +1,15 @@
-module github.com/safecility/microservices/go/device/eastronsdm/pipeline/bigquery
+module github.com/safecility/microservices/go/device/milesitect/pipeline/usage
 
 go 1.21
 
 toolchain go1.21.4
 
 require (
+	cloud.google.com/go/datastore v1.17.0
 	cloud.google.com/go/pubsub v1.38.0
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240530172232-844d8e8d360f
-	github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f
-	google.golang.org/protobuf v1.34.1
+	github.com/safecility/go/lib v0.0.0-20240611085705-73f14e1faf61
+	github.com/safecility/go/setup v0.0.0-20240611085705-73f14e1faf61
 )
 
 require (
@@ -53,4 +53,5 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20240513163218-0867130af1f8 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240509183442-62759503f434 // indirect
 	google.golang.org/grpc v1.63.2 // indirect
+	google.golang.org/protobuf v1.34.1 // indirect
 )

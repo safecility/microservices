@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/go/lib"
 	"github.com/safecility/go/lib/stream"
 	"github.com/safecility/microservices/go/device/milesitect/process/messages"
 	"github.com/safecility/microservices/go/device/milesitect/process/store"
@@ -49,7 +48,7 @@ func (es *MilesiteServer) receive() {
 		}
 
 		log.Debug().Str("eui", sm.DeviceUID).Msg("eastron message")
-		var pd *lib.Device
+		var pd *messages.PowerDevice
 		if es.cache != nil {
 			pd, err = es.cache.GetDevice(sm.DeviceUID)
 			if err != nil {
@@ -58,12 +57,13 @@ func (es *MilesiteServer) receive() {
 			if pd == nil {
 				log.Debug().Str("uid", sm.DeviceUID).Msg("device not found")
 			}
-			mr.Device = pd
+			mr.PowerDevice = pd
 		}
 		if mr.Device == nil && !es.pipeAll {
 			log.Debug().Str("device", sm.DeviceUID).Msg("no device in cache and pipeAll == false")
 			return
 		}
+		mr.Time = sm.Time
 
 		topic, err := stream.PublishToTopic(mr, es.milesiteTopic)
 		if err != nil {

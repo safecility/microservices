@@ -1,8 +1,11 @@
 package messages
 
-import "github.com/safecility/go/lib"
+import (
+	"github.com/safecility/go/lib"
+	"time"
+)
 
-type EastronEagleReading struct {
+type EastronSdmReading struct {
 	*lib.Device
 	ImportActiveEnergy   float64
 	ExportActiveEnergy   float64
@@ -11,4 +14,5 @@ type EastronEagleReading struct {
 	InstantaneousVoltage float64
 	PowerFactor          float64
 	RelayState           float64
+	Time                 time.Time
 }

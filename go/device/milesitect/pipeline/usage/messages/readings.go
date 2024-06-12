@@ -20,6 +20,21 @@ type MilesiteCTReading struct {
 	Current
 }
 
+type MeterReading struct {
+	*lib.Device
+	ReadingKWH float64
+	Time       time.Time
+}
+
+func (mc MilesiteCTReading) Usage() MeterReading {
+	kWh := float64(mc.Current.Total) * mc.Voltage * mc.PowerFactor
+	return MeterReading{
+		Device:     mc.PowerDevice.Device,
+		ReadingKWH: kWh,
+		Time:       mc.Time,
+	}
+}
+
 type Alarms struct {
 	t  bool
 	tr bool

@@ -1,12 +1,12 @@
 package protobuffer
 
 import (
-	"github.com/safecility/microservices/go/device/eagle/pipeline/bigquery/messages"
+	"github.com/safecility/microservices/go/device/eastronsdm/pipeline/bigquery/messages"
 	"time"
 )
 
-func CreateProtobufMessage(r *messages.EastronEagleReading) *Hotdrop {
-	return &Hotdrop{
+func CreateProtobufMessage(r *messages.EastronSdmReading) *EastronSdmBq {
+	return &EastronSdmBq{
 		DeviceEUI:                   r.DeviceEUI,
 		Time:                        r.Time.Format(time.RFC3339),
 		Temp:                        r.Temp,

@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/device/eagle/pipeline/bigquery/messages"
-	"github.com/safecility/microservices/go/device/eagle/pipeline/bigquery/protobuffer"
+	"github.com/safecility/microservices/go/device/eastronsdm/pipeline/bigquery/messages"
+	"github.com/safecility/microservices/go/device/eastronsdm/pipeline/bigquery/protobuffer"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"net/http"
@@ -24,7 +24,7 @@ type HotDropServer struct {
 func (es *HotDropServer) receive() {
 
 	err := es.sub.Receive(context.Background(), func(ctx context.Context, message *pubsub.Message) {
-		r := &messages.EastronEagleReading{}
+		r := &messages.EastronSdmReading{}
 
 		log.Debug().Str("data", fmt.Sprintf("%s", message.Data)).Msg("raw data")
 		err := json.Unmarshal(message.Data, r)

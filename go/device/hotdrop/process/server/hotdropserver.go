@@ -43,7 +43,7 @@ func (es *HotDropServer) receive() {
 		}
 		log.Debug().Int("dataSize", len(newPowerData.Data)).Msg("vu hotdrop readings")
 
-		hdData := newPowerData.GetHotDropReadings()
+		hdData := newPowerData.GetHotdropDeviceReadings()
 		for _, r := range hdData {
 			log.Debug().Str("eui", r.DeviceEUI).Msg("hotdrop message")
 			var pd *messages.PowerDevice

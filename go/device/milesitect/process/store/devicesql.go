@@ -4,13 +4,15 @@ import (
 	"database/sql"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
+	"github.com/safecility/microservices/go/device/milesitect/process/messages"
 )
 
 // TODO adjust locationId when changed on local db
 const (
 	getDeviceStmt = `SELECT uid as DeviceUID, name as DeviceName, tag as DeviceTag, 
-       		groupUID, companyUID, parentUID
+       		groupUID, companyUID, parentUID, power_factor, line_voltage
 		FROM device
+		JOIN safecility.power_device pd on device.id = pd.deviceId
 		WHERE type='power' AND device.uid = ?`
 )
 
@@ -33,7 +35,7 @@ func NewDeviceSql(db *sql.DB) (*DeviceSql, error) {
 	return sqlDB, nil
 }
 
-func (db DeviceSql) GetDevice(uid string) (*lib.Device, error) {
+func (db DeviceSql) GetDevice(uid string) (*messages.PowerDevice, error) {
 	log.Debug().Str("uid", uid).Msg("getting device from sql")
 	row := db.getDeviceByUID.QueryRow(uid)
 
@@ -49,17 +51,19 @@ type rowScanner interface {
 	Scan(dest ...interface{}) error
 }
 
-func scanDevice(s rowScanner) (*lib.Device, error) {
+func scanDevice(s rowScanner) (*messages.PowerDevice, error) {
 	var (
-		name       sql.NullString
-		uid        sql.NullString
-		tag        sql.NullString
-		groupUID   sql.NullString
-		companyUID sql.NullString
-		parentUID  sql.NullString
+		name        sql.NullString
+		uid         sql.NullString
+		tag         sql.NullString
+		groupUID    sql.NullString
+		companyUID  sql.NullString
+		parentUID   sql.NullString
+		powerFactor sql.NullFloat64
+		voltage     sql.NullFloat64
 	)
 
-	err := s.Scan(&name, &uid, &tag, &groupUID, &companyUID, &parentUID)
+	err := s.Scan(&name, &uid, &tag, &groupUID, &companyUID, &parentUID, &powerFactor, &voltage)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
@@ -67,16 +71,20 @@ func scanDevice(s rowScanner) (*lib.Device, error) {
 		return nil, err
 	}
 
-	deviceInfo := lib.Device{
-		DeviceUID: uid.String,
-		DeviceMeta: &lib.DeviceMeta{
-			DeviceName: name.String,
-			DeviceTag:  tag.String,
+	deviceInfo := messages.PowerDevice{
+		Device: &lib.Device{
+			DeviceUID: uid.String,
+			DeviceMeta: &lib.DeviceMeta{
+				DeviceName: name.String,
+				DeviceTag:  tag.String,
+			},
+			Group: &lib.Group{
+				GroupUID:   groupUID.String,
+				CompanyUID: companyUID.String,
+			},
 		},
-		Group: &lib.Group{
-			GroupUID:   groupUID.String,
-			CompanyUID: companyUID.String,
-		},
+		PowerFactor: powerFactor.Float64,
+		Voltage:     voltage.Float64,
 	}
 
 	return &deviceInfo, nil

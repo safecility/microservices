@@ -3,8 +3,8 @@ package messages
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/safecility/go/lib"
 	"math"
+	"time"
 )
 
 const (
@@ -19,6 +19,15 @@ const (
 	firmware       byte = 0x0a
 )
 
+type MilesiteCTReading struct {
+	*PowerDevice
+	UID   string
+	Power bool
+	Time  time.Time
+	Version
+	Current
+}
+
 type Version struct {
 	Ipso     string
 	Hardware string
@@ -31,14 +40,6 @@ type Current struct {
 	Max   float32
 	Min   float32
 	Alarms
-}
-
-type MilesiteCTReading struct {
-	*lib.Device
-	UID   string
-	Power bool
-	Version
-	Current
 }
 
 type Alarms struct {

@@ -6,20 +6,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/device/milesitect/pipeline/messagestore/messages"
-	"github.com/safecility/microservices/go/device/milesitect/pipeline/messagestore/store"
+	"github.com/safecility/go/lib/stream"
+	"github.com/safecility/microservices/go/device/milesitect/pipeline/usage/messages"
 	"net/http"
 	"os"
 )
 
 type MilesiteServer struct {
-	store    *store.DatastoreMilesite
-	sub      *pubsub.Subscription
-	storeAll bool
+	usageTopic *pubsub.Topic
+	sub        *pubsub.Subscription
 }
 
-func NewEastronServer(store *store.DatastoreMilesite, sub *pubsub.Subscription, storeAll bool) MilesiteServer {
-	return MilesiteServer{sub: sub, store: store, storeAll: storeAll}
+func NewEastronServer(u *pubsub.Topic, s *pubsub.Subscription) MilesiteServer {
+	return MilesiteServer{usageTopic: u, sub: s}
 }
 
 func (es *MilesiteServer) Start() {
@@ -40,17 +39,12 @@ func (es *MilesiteServer) receive() {
 			return
 		}
 
-		if r.Device == nil && es.storeAll == false {
-			log.Debug().Str("uid", r.UID).Msg("skipping message as no device and storeAll == false")
+		topic, err := stream.PublishToTopic(r.Usage(), es.usageTopic)
+		if err != nil {
+			log.Err(err).Msg("could not publish data")
 			return
 		}
-
-		go func() {
-			crr := es.store.AddMilesiteMessage(r)
-			if crr != nil {
-				log.Err(crr).Msg("could not add hotdrop data")
-			}
-		}()
+		log.Debug().Str("topic", *topic).Msg("published usage")
 	})
 	if err != nil {
 		log.Err(err).Msg("could not receive from sub")
