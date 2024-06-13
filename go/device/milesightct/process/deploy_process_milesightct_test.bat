@@ -13,7 +13,7 @@ echo "Deploying"
 call go mod vendor
 echo "Mod Vendor"
 call gcloud config set project safecility-test
-call gcloud run deploy mqtt-milesite-ct --source ./ --region "europe-west1"
+call gcloud run deploy process-milesight-ct --source ./ --region "europe-west1"
 
 :exit
 echo "exiting"

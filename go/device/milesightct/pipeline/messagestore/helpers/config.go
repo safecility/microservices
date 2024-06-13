@@ -4,29 +4,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/go/setup"
 	"os"
-	"time"
 )
 
 const (
-	OSDeploymentKey = "WEBHOOK_DEPLOYMENT"
+	OSDeploymentKey = "MILESIGHT_CT_DEPLOYMENT"
 )
 
 type Config struct {
-	ProjectName     string `json:"projectName"`
-	ApplicationName string `json:"applicationName"`
-	Topics          struct {
-		Uplinks          string `json:"uplinks"`
-		DownlinkReceipts string `json:"downlinkReceipts"`
-		Signal           string `json:"signal"`
-		Location         string `json:"location"`
+	ProjectName string `json:"projectName"`
+	Topics      struct {
+		Milesight string `json:"milesight"`
 	} `json:"topics"`
-	Secret       setup.Secret  `json:"secret"`
-	ExpiresHours time.Duration `json:"expires"`
+	Subscriptions struct {
+		Milesight string `json:"milesight"`
+	} `json:"subscriptions"`
+	StoreAll bool `json:"storeAll"`
 }
 
-// GetConfig for Everynet
+// GetConfig creates a config for the specified deployment
 func GetConfig(deployment string) *Config {
 	fileName := fmt.Sprintf("%s-config.json", deployment)
 

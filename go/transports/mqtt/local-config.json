@@ -1,20 +1,20 @@
 {
   "projectName": "safecility-test",
   "mqtt": {
-    "appID": "sdm230-lora",
-    "username": "sdm230-lora@ttn",
+    "appID": "**",
+    "username": "**",
     "address": "ssl://eu1.cloud.thethings.network:8883",
     "downlink": false,
     "location": false,
     "signal": false
   },
   "secret": {
-    "name": "ttn-sdm230",
+    "name": "**",
     "version": 1
   },
   "topics": {
-    "joins": "test-mqtt-joins",
-    "uplinks": "test-mqtt-bytes",
-    "signal": "test-mqtt-signal"
+    "joins": "local-milesight-joins",
+    "uplinks": "local-milesight-uplinks",
+    "signal": "local-milesight-signal"
   }
 }

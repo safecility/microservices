@@ -2,6 +2,7 @@ package server
 
 import (
 	"cloud.google.com/go/pubsub"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
@@ -27,16 +28,28 @@ func NewEverynetServer(jwtParser *lib.JWTParser, uplinks *pubsub.Topic) Everynet
 
 // Start listen at the given port for /vutility messages
 func (en *EverynetServer) Start() {
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		_, err := fmt.Fprintf(w, "started")
+		if err != nil {
+			log.Err(err).Msg(fmt.Sprintf("could write to http.ResponseWriter"))
+		}
+	})
+
 	handler := http.HandlerFunc(en.handleRequest)
 
 	http.Handle("/eastron", handler)
 	//if we're allowed hotdrop raw messages with firmware
 	http.Handle("/vutility", handler)
 
+	http.Handle("/milesite", handler)
+
 	port, e := os.LookupEnv("PORT")
 	if !e {
 		port = "8092"
 	}
+
+	log.Info().Str("port", port).Msg("starting on port")
 	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal().Msg(fmt.Sprintf("could not start http: %v", err))
@@ -48,6 +61,7 @@ func (en *EverynetServer) handleRequest(w http.ResponseWriter, r *http.Request) 
 	err := en.handleAuth(r)
 	if err != nil {
 		log.Err(err).Msg("could not handle request")
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -58,6 +72,12 @@ func (en *EverynetServer) handleRequest(w http.ResponseWriter, r *http.Request) 
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	if data == nil || len(data) == 0 {
+		log.Debug().Msg("no body")
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	var enMessage messages.ENMessage
 
 	err = json.Unmarshal(data, &enMessage)
@@ -68,7 +88,7 @@ func (en *EverynetServer) handleRequest(w http.ResponseWriter, r *http.Request) 
 	}
 
 	go func() {
-		err := en.handleLoraMessage(enMessage)
+		err := en.handleEverynetMessage(enMessage)
 		if err != nil {
 			log.Error().Err(err).Msg("could not handle message")
 		}
@@ -79,7 +99,10 @@ func (en *EverynetServer) handleRequest(w http.ResponseWriter, r *http.Request) 
 	return
 }
 
-func (en *EverynetServer) handleLoraMessage(enMessage messages.ENMessage) error {
+func (en *EverynetServer) handleEverynetMessage(enMessage messages.ENMessage) error {
+
+	log.Info().Str("application", enMessage.Meta.Application).Str("type", string(enMessage.Type)).Msg("got enMessage from application")
+
 	switch enMessage.Type {
 	case messages.InfoType:
 		var info messages.InfoParams
@@ -100,12 +123,18 @@ func (en *EverynetServer) handleLoraMessage(enMessage messages.ENMessage) error 
 
 		now := time.Now()
 
+		payload, err := base64.StdEncoding.DecodeString(uplink.Payload)
+		if err != nil {
+			log.Err(err).Msg("could not decode payload")
+			return err
+		}
+
 		sm := &stream.SimpleMessage{
 			BrokerDevice: stream.BrokerDevice{
 				Source:    "everynet",
 				DeviceUID: enMessage.Meta.Device,
 			},
-			Payload: []byte(uplink.Payload),
+			Payload: payload,
 			Time:    now,
 		}
 		_, err = stream.PublishToTopic(sm, en.uplinks)
@@ -146,6 +175,6 @@ func (en *EverynetServer) handleAuth(r *http.Request) error {
 		return err
 	}
 	// for the moment we're not interested in the claims
-	_ = claims
+	log.Debug().Str("claims", fmt.Sprintf("%+v", claims)).Msg("got claims")
 	return nil
 }

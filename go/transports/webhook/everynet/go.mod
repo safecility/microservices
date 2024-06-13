@@ -9,9 +9,8 @@ require (
 	cloud.google.com/go/secretmanager v1.13.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240607150417-c72d5d45d7ea
-	github.com/safecility/go/mqtt v0.0.0-20240530172232-844d8e8d360f
-	github.com/safecility/go/setup v0.0.0-20240530172232-844d8e8d360f
+	github.com/safecility/go/lib v0.0.0-20240613094904-cf8d0617e3e2
+	github.com/safecility/go/setup v0.0.0-20240613094904-cf8d0617e3e2
 )
 
 require (

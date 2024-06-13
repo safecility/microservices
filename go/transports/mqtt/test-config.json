@@ -1,24 +1,20 @@
 {
   "projectName": "safecility-test",
   "mqtt": {
-    "appID": "**some-test-id**",
-    "username": "**some-test-username**",
+    "appID": "**",
+    "username": "**@ttn",
     "address": "ssl://eu1.cloud.thethings.network:8883",
     "downlink": false,
     "location": false,
-    "signal": false,
+    "signal": false
   },
   "secret": {
-    "name": "lora-test-secret",
+    "name": "**",
     "version": 1
   },
   "topics": {
-    "joins": "test-joins",
-    "uplinks": "test-bytes",
-    "downlinks": "test-ttn-downlink",
-    "downlinkReceipts": "test-downlink-receipts"
-  },
-  "subscriptions": {
-    "downlinks": "test-ttn-downlink-sub"
+    "joins": "test-milesight-joins",
+    "uplinks": "test-milesight-uplinks",
+    "signal": "test-milesight-signal"
   }
 }

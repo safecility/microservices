@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cloud.google.com/go/pubsub"
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
 	"context"
 	"crypto/hmac"
@@ -41,10 +42,14 @@ func main() {
 	hmacSecret := sig.Sum(nil)
 
 	now := time.Now()
+	expires := now.Add(config.ExpiresHours * time.Hour)
+	log.Debug().Time("expires", expires).Msg("expires on")
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"service": "everynet",
+		"service": config.ApplicationName,
+		"uplinks": config.Topics.Uplinks,
 		"created": now.Format(time.RFC3339),
+		"exp":     expires.Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
@@ -54,7 +59,7 @@ func main() {
 		return
 	}
 
-	fo, err := os.Create("jwt.txt")
+	fo, err := os.Create(fmt.Sprintf("%s-%s", config.ApplicationName, "jwt.txt"))
 	if err != nil {
 		log.Error().Err(err).Msg("could not create file")
 	}
@@ -83,8 +88,25 @@ func main() {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		fmt.Println("token OK", claims["service"], claims["created"])
+		fmt.Printf("token OK %+v \n", claims)
 	} else {
 		fmt.Println(err)
 	}
+
+	gpsClient, err := pubsub.NewClient(ctx, config.ProjectName)
+	if err != nil {
+		log.Fatal().Err(err).Msg("could not setup pubsub")
+	}
+
+	uplinkTopic := gpsClient.Topic(config.Topics.Uplinks)
+	exists, err := uplinkTopic.Exists(ctx)
+	if !exists {
+		uplinkTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Uplinks)
+		if err != nil {
+			log.Fatal().Err(err).Msg("setup could not create topic")
+		}
+
+		log.Info().Str("topic", uplinkTopic.String()).Msg("created topic")
+	}
+	log.Info().Msg("setup complete")
 }

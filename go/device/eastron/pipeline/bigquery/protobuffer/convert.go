@@ -7,15 +7,13 @@ import (
 
 func CreateProtobufMessage(r *messages.EastronSdmReading) *EastronSdmBq {
 	return &EastronSdmBq{
-		DeviceEUI:                   r.DeviceEUI,
-		Time:                        r.Time.Format(time.RFC3339),
-		Temp:                        r.Temp,
-		InstantaneousCurrent:        r.InstantaneousCurrent.Milli,
-		MaximumCurrent:              r.MaximumCurrent.Milli,
-		SecondsAgoForMaximumCurrent: r.SecondsAgoForMaximumCurrent,
-		MinimumCurrent:              r.MinimumCurrent.Milli,
-		SecondsAgoForMinimumCurrent: r.SecondsAgoForMinimumCurrent,
-		AccumulatedCurrent:          r.AccumulatedCurrent.Milli,
-		SupplyVoltage:               r.SupplyVoltage,
+		DeviceUID:            r.DeviceUID,
+		Time:                 r.Time.Format(time.RFC3339),
+		ActivePower:          r.ActivePower,
+		ImportActiveEnergy:   r.ImportActiveEnergy,
+		ExportActiveEnergy:   r.ExportActiveEnergy,
+		InstantaneousCurrent: r.InstantaneousCurrent,
+		InstantaneousVoltage: r.InstantaneousVoltage,
+		PowerFactor:          r.PowerFactor,
 	}
 }
