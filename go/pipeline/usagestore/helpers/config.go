@@ -8,17 +8,16 @@ import (
 )
 
 const (
-	OSDeploymentKey = "MILESIGHT_CT_DEPLOYMENT"
+	OSDeploymentKey = "USAGE_DEPLOYMENT"
 )
 
 type Config struct {
 	ProjectName string `json:"projectName"`
 	Topics      struct {
-		Milesight string `json:"milesight"`
-		Usage     string `json:"usage"`
+		Usage string `json:"usage"`
 	} `json:"topics"`
 	Subscriptions struct {
-		Milesight string `json:"milesight"`
+		Usage string `json:"usage"`
 	} `json:"subscriptions"`
 	StoreAll bool `json:"storeAll"`
 }

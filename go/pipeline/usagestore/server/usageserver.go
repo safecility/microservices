@@ -6,31 +6,31 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/device/milesightct/pipeline/messagestore/messages"
-	"github.com/safecility/microservices/go/device/milesightct/pipeline/messagestore/store"
+	"github.com/safecility/microservices/go/pipeline/usagestore/messages"
+	"github.com/safecility/microservices/go/pipeline/usagestore/store"
 	"net/http"
 	"os"
 )
 
-type MilesightServer struct {
-	store    *store.DatastoreMilesight
+type UsageServer struct {
+	store    *store.DatastoreUsage
 	sub      *pubsub.Subscription
 	storeAll bool
 }
 
-func NewMilesightServer(store *store.DatastoreMilesight, sub *pubsub.Subscription, storeAll bool) MilesightServer {
-	return MilesightServer{sub: sub, store: store, storeAll: storeAll}
+func NewUsageServer(store *store.DatastoreUsage, sub *pubsub.Subscription, storeAll bool) UsageServer {
+	return UsageServer{sub: sub, store: store, storeAll: storeAll}
 }
 
-func (es *MilesightServer) Start() {
+func (es *UsageServer) Start() {
 	go es.receive()
 	es.serverHttp()
 }
 
-func (es *MilesightServer) receive() {
+func (es *UsageServer) receive() {
 
 	err := es.sub.Receive(context.Background(), func(ctx context.Context, message *pubsub.Message) {
-		r := &messages.MilesightCTReading{}
+		r := &messages.MeterReading{}
 
 		log.Debug().Str("data", fmt.Sprintf("%s", message.Data)).Msg("raw data")
 		err := json.Unmarshal(message.Data, r)
@@ -40,13 +40,13 @@ func (es *MilesightServer) receive() {
 			return
 		}
 
-		if r.PowerDevice == nil && es.storeAll == false {
-			log.Debug().Str("uid", r.UID).Msg("skipping message as no device and storeAll == false")
+		if r.Device == nil && es.storeAll == false {
+			log.Debug().Msg("skipping message as no device and storeAll == false")
 			return
 		}
 
 		go func() {
-			crr := es.store.AddMilesightMessage(r)
+			crr := es.store.AddMeterReading(r)
 			if crr != nil {
 				log.Err(crr).Msg("could not add hotdrop data")
 			}
@@ -58,7 +58,7 @@ func (es *MilesightServer) receive() {
 	}
 }
 
-func (es *MilesightServer) serverHttp() {
+func (es *UsageServer) serverHttp() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := fmt.Fprintf(w, "started")
 		if err != nil {
@@ -68,7 +68,7 @@ func (es *MilesightServer) serverHttp() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8081"
+		port = "8084"
 	}
 	log.Debug().Msg(fmt.Sprintf("starting http server port %s", port))
 	err := http.ListenAndServe(":"+port, nil)

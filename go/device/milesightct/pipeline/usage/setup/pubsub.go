@@ -36,15 +36,15 @@ func main() {
 		log.Info().Str("topic", usageTopic.String()).Msg("created topic")
 	}
 
-	milesiteSubscription := gpsClient.Subscription(config.Subscriptions.Milesite)
+	milesiteSubscription := gpsClient.Subscription(config.Subscriptions.Milesight)
 	exists, err = milesiteSubscription.Exists(ctx)
 	if !exists {
-		milesiteTopic := gpsClient.Topic(config.Topics.Milesite)
+		milesiteTopic := gpsClient.Topic(config.Topics.Milesight)
 		exists, err = milesiteTopic.Exists(ctx)
 		if !exists {
-			milesiteTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Milesite)
+			milesiteTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Milesight)
 			if err != nil {
-				log.Fatal().Err(err).Str("topic", config.Topics.Milesite).Msg("setup could not create topic")
+				log.Fatal().Err(err).Str("topic", config.Topics.Milesight).Msg("setup could not create topic")
 			}
 			log.Info().Str("topic", milesiteTopic.String()).Msg("created topic")
 		}
@@ -54,7 +54,7 @@ func main() {
 			log.Fatal().Err(err).Msg("could not parse duration")
 		}
 		subConfig := stream.GetDefaultSubscriptionConfig(milesiteTopic, r)
-		milesiteSubscription, err = gpsClient.CreateSubscription(ctx, config.Subscriptions.Milesite, subConfig)
+		milesiteSubscription, err = gpsClient.CreateSubscription(ctx, config.Subscriptions.Milesight, subConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("setup could not create subscription")
 		}

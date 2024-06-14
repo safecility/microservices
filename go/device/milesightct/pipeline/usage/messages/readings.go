@@ -1,6 +1,7 @@
 package messages
 
 import (
+	"fmt"
 	"github.com/safecility/go/lib"
 	"time"
 )
@@ -11,7 +12,7 @@ type PowerDevice struct {
 	Voltage     float64 `datastore:",omitempty"`
 }
 
-type MilesiteCTReading struct {
+type MilesightCTReading struct {
 	*PowerDevice
 	UID   string
 	Power bool
@@ -26,13 +27,16 @@ type MeterReading struct {
 	Time       time.Time
 }
 
-func (mc MilesiteCTReading) Usage() MeterReading {
+func (mc MilesightCTReading) Usage() (*MeterReading, error) {
+	if mc.PowerDevice == nil {
+		return nil, fmt.Errorf("device does not have its PowerDevice definitions")
+	}
 	kWh := float64(mc.Current.Total) * mc.Voltage * mc.PowerFactor
-	return MeterReading{
+	return &MeterReading{
 		Device:     mc.PowerDevice.Device,
 		ReadingKWH: kWh,
 		Time:       mc.Time,
-	}
+	}, nil
 }
 
 type Alarms struct {

@@ -38,8 +38,8 @@ func main() {
 		return // this is here so golang doesn't complain about gpsClient being possibly nil
 	}
 
-	hotdropSubscription := gpsClient.Subscription(config.Subscriptions.Milesight)
-	exists, err := hotdropSubscription.Exists(ctx)
+	milesightSubscription := gpsClient.Subscription(config.Subscriptions.Milesight)
+	exists, err := milesightSubscription.Exists(ctx)
 	if !exists {
 		log.Fatal().Str("subscription", config.Subscriptions.Milesight).Msg("no eastron subscription")
 	}
@@ -51,9 +51,9 @@ func main() {
 	d, err := store.NewDatastoreMilesite(dsClient)
 
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not get datastore hotdrop")
+		log.Fatal().Err(err).Msg("could not get datastore milesight")
 	}
 
-	hotDropServer := server.NewMilesightServer(d, hotdropSubscription, config.StoreAll)
+	hotDropServer := server.NewMilesightServer(d, milesightSubscription, config.StoreAll)
 	hotDropServer.Start()
 }

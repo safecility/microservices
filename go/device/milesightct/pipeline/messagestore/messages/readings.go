@@ -11,7 +11,7 @@ type PowerDevice struct {
 	Voltage     float64 `datastore:",omitempty"`
 }
 
-type MilesiteCTReading struct {
+type MilesightCTReading struct {
 	*PowerDevice
 	UID     string
 	Power   bool      `datastore:",omitempty"`

@@ -19,7 +19,7 @@ const (
 	firmware       byte = 0x0a
 )
 
-type MilesiteCTReading struct {
+type MilesightCTReading struct {
 	*PowerDevice
 	UID   string
 	Power bool
@@ -49,8 +49,8 @@ type Alarms struct {
 	rr bool
 }
 
-func ReadMilesiteCT(payload []byte) (*MilesiteCTReading, error) {
-	dpi := &MilesiteCTReading{}
+func ReadMilesightCT(payload []byte) (*MilesightCTReading, error) {
+	dpi := &MilesightCTReading{}
 
 	read := 0
 	available := len(payload)
@@ -65,7 +65,7 @@ func ReadMilesiteCT(payload []byte) (*MilesiteCTReading, error) {
 	return dpi, nil
 }
 
-func readSlice(r *MilesiteCTReading, payload []byte, offset int) (int, error) {
+func readSlice(r *MilesightCTReading, payload []byte, offset int) (int, error) {
 	available := len(payload) - offset
 	if available < 2 {
 		return 0, fmt.Errorf("payload too small")

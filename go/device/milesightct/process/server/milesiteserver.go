@@ -14,14 +14,14 @@ import (
 )
 
 type MilesiteServer struct {
-	cache         store.DeviceStore
-	sub           *pubsub.Subscription
-	milesiteTopic *pubsub.Topic
-	pipeAll       bool
+	cache          store.DeviceStore
+	sub            *pubsub.Subscription
+	milesightTopic *pubsub.Topic
+	pipeAll        bool
 }
 
 func NewMilesiteServer(cache store.DeviceStore, sub *pubsub.Subscription, eagle *pubsub.Topic, pipeAll bool) MilesiteServer {
-	return MilesiteServer{sub: sub, cache: cache, milesiteTopic: eagle, pipeAll: pipeAll}
+	return MilesiteServer{sub: sub, cache: cache, milesightTopic: eagle, pipeAll: pipeAll}
 }
 
 func (es *MilesiteServer) Start() {
@@ -41,13 +41,13 @@ func (es *MilesiteServer) receive() {
 			return
 		}
 
-		mr, err := messages.ReadMilesiteCT(sm.Payload)
+		mr, err := messages.ReadMilesightCT(sm.Payload)
 		if err != nil {
-			log.Err(err).Msg("could not read milesite CT")
+			log.Err(err).Msg("could not read milesight CT")
 			return
 		}
 
-		log.Debug().Str("messageID", sm.DeviceUID).Msg("milesite ct message")
+		log.Debug().Str("messageID", sm.DeviceUID).Msg("milesight ct message")
 		var pd *messages.PowerDevice
 		if es.cache != nil {
 			pd, err = es.cache.GetDevice(sm.DeviceUID)
@@ -67,7 +67,7 @@ func (es *MilesiteServer) receive() {
 		// we thought we were getting this in the message but it's only in *some* messages
 		mr.UID = sm.DeviceUID
 
-		topic, err := stream.PublishToTopic(mr, es.milesiteTopic)
+		topic, err := stream.PublishToTopic(mr, es.milesightTopic)
 		if err != nil {
 			log.Err(err).Msg("could not publish usage to topic")
 			return

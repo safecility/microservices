@@ -16,13 +16,13 @@ func NewDatastoreMilesite(client *datastore.Client) (*DatastoreMilesight, error)
 	return rd, nil
 }
 
-func (d *DatastoreMilesight) AddMilesiteMessage(m *messages.MilesiteCTReading) error {
+func (d *DatastoreMilesight) AddMilesightMessage(m *messages.MilesightCTReading) error {
 	ctx := context.Background()
 	k := datastore.IncompleteKey("MilesightCT", nil)
 	k, err := d.client.Put(ctx, k, m)
 	if err != nil {
 		return err
 	}
-	log.Debug().Str("uid", m.UID).Msg("putting new milesite ct message")
+	log.Debug().Str("uid", m.UID).Msg("putting new milesight ct message")
 	return nil
 }

@@ -12,24 +12,24 @@ import (
 	"os"
 )
 
-type MilesiteServer struct {
+type MilesightServer struct {
 	usageTopic *pubsub.Topic
 	sub        *pubsub.Subscription
 }
 
-func NewEastronServer(u *pubsub.Topic, s *pubsub.Subscription) MilesiteServer {
-	return MilesiteServer{usageTopic: u, sub: s}
+func NewMilesightServer(u *pubsub.Topic, s *pubsub.Subscription) MilesightServer {
+	return MilesightServer{usageTopic: u, sub: s}
 }
 
-func (es *MilesiteServer) Start() {
+func (es *MilesightServer) Start() {
 	go es.receive()
 	es.serverHttp()
 }
 
-func (es *MilesiteServer) receive() {
+func (es *MilesightServer) receive() {
 
 	err := es.sub.Receive(context.Background(), func(ctx context.Context, message *pubsub.Message) {
-		r := &messages.MilesiteCTReading{}
+		r := &messages.MilesightCTReading{}
 
 		log.Debug().Str("data", fmt.Sprintf("%s", message.Data)).Msg("raw data")
 		err := json.Unmarshal(message.Data, r)
@@ -39,7 +39,13 @@ func (es *MilesiteServer) receive() {
 			return
 		}
 
-		topic, err := stream.PublishToTopic(r.Usage(), es.usageTopic)
+		usage, err := r.Usage()
+		if err != nil {
+			log.Err(err).Msg("could not get usage")
+			return
+		}
+
+		topic, err := stream.PublishToTopic(usage, es.usageTopic)
 		if err != nil {
 			log.Err(err).Msg("could not publish data")
 			return
@@ -52,7 +58,7 @@ func (es *MilesiteServer) receive() {
 	}
 }
 
-func (es *MilesiteServer) serverHttp() {
+func (es *MilesightServer) serverHttp() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := fmt.Fprintf(w, "started")
 		if err != nil {
@@ -62,7 +68,7 @@ func (es *MilesiteServer) serverHttp() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8081"
+		port = "8082"
 	}
 	log.Debug().Msg(fmt.Sprintf("starting http server port %s", port))
 	err := http.ListenAndServe(":"+port, nil)

@@ -26,29 +26,29 @@ func main() {
 		log.Fatal().Err(err).Msg("could not setup pubsub")
 	}
 
-	milesiteSubscription := gpsClient.Subscription(config.Subscriptions.Milesight)
-	exists, err := milesiteSubscription.Exists(ctx)
+	milesightSubscription := gpsClient.Subscription(config.Subscriptions.Milesight)
+	exists, err := milesightSubscription.Exists(ctx)
 	if !exists {
-		milesiteTopic := gpsClient.Topic(config.Topics.Milesight)
-		exists, err = milesiteTopic.Exists(ctx)
+		milesightTopic := gpsClient.Topic(config.Topics.Milesight)
+		exists, err = milesightTopic.Exists(ctx)
 		if !exists {
-			milesiteTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Milesight)
+			milesightTopic, err = gpsClient.CreateTopic(ctx, config.Topics.Milesight)
 			if err != nil {
 				log.Fatal().Err(err).Str("topic", config.Topics.Milesight).Msg("setup could not create topic")
 			}
-			log.Info().Str("topic", milesiteTopic.String()).Msg("created topic")
+			log.Info().Str("topic", milesightTopic.String()).Msg("created topic")
 		}
 
 		r, err := time.ParseDuration("1h")
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not parse duration")
 		}
-		subConfig := stream.GetDefaultSubscriptionConfig(milesiteTopic, r)
-		milesiteSubscription, err = gpsClient.CreateSubscription(ctx, config.Subscriptions.Milesight, subConfig)
+		subConfig := stream.GetDefaultSubscriptionConfig(milesightTopic, r)
+		milesightSubscription, err = gpsClient.CreateSubscription(ctx, config.Subscriptions.Milesight, subConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("setup could not create subscription")
 		}
-		log.Info().Str("topic", milesiteSubscription.String()).Msg("created subscription")
+		log.Info().Str("topic", milesightSubscription.String()).Msg("created subscription")
 	}
 
 	log.Info().Msg("setup complete")

@@ -28,7 +28,7 @@ func TestReadMilesiteCT(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *MilesiteCTReading
+		want    *MilesightCTReading
 		wantErr bool
 	}{
 		// TODO: Add test cases.
@@ -43,7 +43,7 @@ func TestReadMilesiteCT(t *testing.T) {
 					0x03, 0x97, 0x10, 0x27, 0x00, 0x00,
 					0x84, 0x98, 0xB8, 0x0B, 0xD0, 0x07, 0xC4, 0x09, 0x05},
 			},
-			want: &MilesiteCTReading{
+			want: &MilesightCTReading{
 				UID:   "6746d38802580000",
 				Power: true,
 				Version: Version{
@@ -70,7 +70,7 @@ func TestReadMilesiteCT(t *testing.T) {
 			args: args{
 				payload: whData,
 			},
-			want: &MilesiteCTReading{
+			want: &MilesightCTReading{
 				UID:   "6746d38802580000",
 				Power: true,
 				Version: Version{
@@ -97,7 +97,7 @@ func TestReadMilesiteCT(t *testing.T) {
 			args: args{
 				payload: ttnData,
 			},
-			want: &MilesiteCTReading{
+			want: &MilesightCTReading{
 				UID:   "6746d38802580000",
 				Power: true,
 				Version: Version{
@@ -122,13 +122,13 @@ func TestReadMilesiteCT(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ReadMilesiteCT(tt.args.payload)
+			got, err := ReadMilesightCT(tt.args.payload)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ReadMilesiteCT() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ReadMilesightCT() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ReadMilesiteCT() got = %v, want %v", got, tt.want)
+				t.Errorf("ReadMilesightCT() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -175,7 +175,7 @@ func Test_readAlarm(t *testing.T) {
 
 func Test_readSlice(t *testing.T) {
 	type args struct {
-		r       *MilesiteCTReading
+		r       *MilesightCTReading
 		payload []byte
 		offset  int
 	}
@@ -189,7 +189,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "power",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0xFF, 0x0B, 0xFF},
 				offset:  0,
 			},
@@ -198,7 +198,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "ipso",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0xFF, 0x01, 0x01},
 				offset:  0,
 			},
@@ -207,7 +207,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "serial",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0xFF, 0x16, 0x67, 0x46, 0xD3, 0x88, 0x02, 0x58, 0x00, 0x00},
 				offset:  0,
 			},
@@ -216,7 +216,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "hardware",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0xFF, 0x09, 0x01, 0x00},
 				offset:  0,
 			},
@@ -225,7 +225,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "firmware",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0xFF, 0x0A, 0x01, 0x01},
 				offset:  0,
 			},
@@ -234,7 +234,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "total current",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0x03, 0x97, 0x10, 0x27, 0x00, 0x00},
 				offset:  0,
 			},
@@ -243,7 +243,7 @@ func Test_readSlice(t *testing.T) {
 		{
 			name: "current alarm",
 			args: args{
-				r:       &MilesiteCTReading{},
+				r:       &MilesightCTReading{},
 				payload: []byte{0x84, 0x98, 0xB8, 0x0B, 0xD0, 0x07, 0xC4, 0x09, 0x05},
 				offset:  0,
 			},
