@@ -1,21 +1,18 @@
-package main
+package sections
 
 import (
+	"cloud.google.com/go/bigquery"
 	"cloud.google.com/go/pubsub"
 	"context"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/go/setup"
+	"github.com/safecility/go/lib/stream"
 	"github.com/safecility/microservices/go/device/hotdrop/pipeline/bigquery/helpers"
 	"os"
+	"time"
 )
 
-func main() {
-	deployment, isSet := os.LookupEnv(helpers.OSDeploymentKey)
-	if !isSet {
-		deployment = string(setup.Local)
-	}
-	config := helpers.GetConfig(deployment)
+func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 
 	ctx := context.Background()
 	sClient, err := pubsub.NewSchemaClient(ctx, config.ProjectName)
@@ -29,9 +26,9 @@ func main() {
 		}
 	}(sClient)
 
-	schema, err := sClient.Schema(ctx, config.Schema.Name, pubsub.SchemaViewFull)
+	schema, err := sClient.Schema(ctx, config.BigQuery.Schema.Name, pubsub.SchemaViewFull)
 	if err != nil || schema == nil {
-		schema, err = createProtoSchema(sClient, config.Schema.Name, config.Schema.FilePath)
+		schema, err = createProtoSchema(sClient, config.BigQuery.Schema.Name, config.BigQuery.Schema.FilePath)
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not create schema")
 		}
@@ -42,23 +39,51 @@ func main() {
 		log.Fatal().Err(err).Msg("could not setup pubsub")
 	}
 
-	bigqueryTopic := gpsClient.Topic(config.Topics.Bigquery)
+	bigqueryTopic := gpsClient.Topic(config.Pubsub.Topics.Bigquery)
 	exists, err := bigqueryTopic.Exists(ctx)
 	if !exists {
-		bigqueryTopic, err = createBigqueryTopic(gpsClient, config.Topics.Bigquery, schema)
+		bigqueryTopic, err = createBigqueryTopic(gpsClient, config.Pubsub.Topics.Bigquery, schema)
 		if err != nil {
-			log.Fatal().Err(err).Msg("could not create bigquery topic")
+			log.Fatal().Str("sub", config.Pubsub.Subscriptions.BigQuery).Err(err).Msg("could not create bigquery topic")
 		}
+		log.Info().Msg("bigquery topic created")
 	}
-
-	bigquerySubscription := gpsClient.Subscription(config.Topics.Bigquery)
-	exists, err = bigquerySubscription.Exists(ctx)
+	bigQuerySubscription := gpsClient.Subscription(config.Pubsub.Subscriptions.BigQuery)
+	exists, err = bigQuerySubscription.Exists(ctx)
 	if !exists {
-		err = createBigQuerySubscription(gpsClient, config.Subscriptions.Hotdrop, config.Table, bigqueryTopic)
+		err = createBigQuerySubscription(gpsClient, config.Pubsub.Subscriptions.BigQuery, t.FullID, bigqueryTopic)
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not create bigquery subscription")
 		}
+		log.Info().Msg("created bigquery subscription")
 	}
+
+	hotdropSubscription := gpsClient.Subscription(config.Pubsub.Subscriptions.Hotdrop)
+	exists, err = hotdropSubscription.Exists(ctx)
+	if !exists {
+		hotdropTopic := gpsClient.Topic(config.Pubsub.Topics.Hotdrop)
+		if exists, err = hotdropTopic.Exists(ctx); err != nil {
+			log.Fatal().Err(err).Msg("could not check if hotdrop topic exists")
+		}
+		if !exists {
+			hotdropTopic, err = createBigqueryTopic(gpsClient, config.Pubsub.Topics.Hotdrop, schema)
+			if err != nil {
+				log.Fatal().Err(err).Msg("could not create hotdrop topic")
+			}
+			log.Info().Msg("created hotdrop topic")
+		}
+
+		r, err := time.ParseDuration("1h")
+		if err != nil {
+			log.Fatal().Err(err).Msg("could not parse duration")
+		}
+		subConfig := stream.GetDefaultSubscriptionConfig(hotdropTopic, r)
+		hotdropSubscription, err = gpsClient.CreateSubscription(ctx, config.Pubsub.Subscriptions.Hotdrop, subConfig)
+		if err != nil {
+			log.Fatal().Err(err).Msg("setup could not create subscription")
+		}
+	}
+	log.Info().Msg("finished pubsub setup")
 }
 
 // createProtoSchema creates a schema resource from a schema proto file.
@@ -105,12 +130,14 @@ func createBigQuerySubscription(client *pubsub.Client, subscriptionName, table s
 	sub, err := client.CreateSubscription(ctx, subscriptionName, pubsub.SubscriptionConfig{
 		Topic: topic,
 		BigQueryConfig: pubsub.BigQueryConfig{
-			Table:         table,
-			WriteMetadata: true,
+			Table:             table,
+			WriteMetadata:     false,
+			UseTopicSchema:    true,
+			DropUnknownFields: true,
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("client.CreateSubscription: %w", err)
+		return err
 	}
 	log.Debug().Str("subscription", sub.ID()).Msg("Created BigQuery subscription")
 

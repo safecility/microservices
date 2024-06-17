@@ -6,3 +6,5 @@ To store data in Bigquery via pubsub we need
 * a pubsub.Subscription set to handle bigQuery
 
 (see: https://cloud.google.com/pubsub/docs/create-bigquery-subscription)
+
+protobuf messages passed to the bigQuery topic will be stored automatically

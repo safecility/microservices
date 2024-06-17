@@ -13,19 +13,25 @@ const (
 
 type Config struct {
 	ProjectName string `json:"projectName"`
-	Topics      struct {
-		Hotdrop  string `json:"hotdrop"`
-		Bigquery string `json:"bigquery"`
-	} `json:"topics"`
-	Subscriptions struct {
-		Hotdrop string `json:"hotdrop"`
-	} `json:"subscriptions"`
-	Schema struct {
-		Name     string `json:"name"`
-		FilePath string `json:"filePath"`
-	} `json:"schema"`
-	Table    string `json:"table"`
-	StoreAll bool   `json:"storeAll"`
+	Pubsub      struct {
+		Topics struct {
+			Hotdrop  string `json:"hotdrop"`
+			Bigquery string `json:"bigquery"`
+		} `json:"topics"`
+		Subscriptions struct {
+			BigQuery string `json:"bigquery"`
+			Hotdrop  string `json:"hotdrop"`
+		} `json:"subscriptions"`
+	} `json:"pubsub"`
+	BigQuery struct {
+		Dataset string `json:"dataset"`
+		Table   string `json:"table"`
+		Schema  struct {
+			Name     string `json:"name"`
+			FilePath string `json:"filePath"`
+		} `json:"schema"`
+	} `json:"bigQuery"`
+	StoreAll bool `json:"storeAll"`
 }
 
 // GetConfig creates a config for the specified deployment

@@ -3,16 +3,16 @@
   "pubsub": {
     "topics": {
       "hotdrop": "test-hotdrop",
-      "bigquery": "local-hotdrop-bigquery"
+      "bigquery": "test-hotdrop-bigquery"
     },
     "subscriptions": {
       "hotdrop": "test-hotdrop-bigquery-sub",
-      "bigquery": "local-hotdrop-bigquery-sub"
+      "bigquery": "test-hotdrop-bigquery-sub"
     }
   },
   "bigQuery": {
     "dataset": "energy",
-    "table": "local-hotdrop",
+    "table": "test-hotdrop",
     "schema": {
       "name": "bigquery-hotdrop",
       "filePath": "./protobuffer/hotdrop.proto"

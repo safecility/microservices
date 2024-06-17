@@ -29,22 +29,22 @@ func main() {
 		return
 	}
 
-	sub := gpsClient.Subscription(config.Subscriptions.Hotdrop)
+	sub := gpsClient.Subscription(config.Pubsub.Subscriptions.Hotdrop)
 	exists, err := sub.Exists(ctx)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failure on subscription exists")
 	}
 	if !exists {
-		log.Fatal().Str("subscription", config.Subscriptions.Hotdrop).Msg("Subscription does not exist")
+		log.Fatal().Str("subscription", config.Pubsub.Subscriptions.Hotdrop).Msg("Subscription does not exist")
 	}
 
-	topic := gpsClient.Topic(config.Topics.Bigquery)
+	topic := gpsClient.Topic(config.Pubsub.Topics.Bigquery)
 	exists, err = topic.Exists(ctx)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failure on topic exists")
 	}
 	if !exists {
-		log.Fatal().Str("topic", config.Topics.Bigquery).Msg("Topic does not exist")
+		log.Fatal().Str("topic", config.Pubsub.Topics.Bigquery).Msg("Topic does not exist")
 	}
 
 	bigqueryServer := server.NewHotDropServer(sub, topic, config.StoreAll)

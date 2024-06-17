@@ -13,5 +13,4 @@ message Hotdrop {
   double   SecondsAgoForMinimumCurrent  = 8;
   double   AccumulatedCurrent           = 9;
   double   SupplyVoltage                = 10;
-  int64    CompanyID                    = 11;
 }
