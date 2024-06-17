@@ -142,6 +142,7 @@ func (en *EverynetServer) handleEverynetMessage(enMessage messages.ENMessage) er
 			log.Error().Err(err).Msg("could not publish uplink")
 			return err
 		}
+		log.Debug().Str("uid", enMessage.Meta.Device).Str("topic", en.uplinks.String()).Msg("published en uplink")
 	case messages.DownlinkType:
 		log.Debug().Str("data", string(enMessage.Type)).Msg("downlink")
 		break

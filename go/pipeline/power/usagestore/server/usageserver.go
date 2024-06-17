@@ -6,8 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/pipeline/usagestore/messages"
-	"github.com/safecility/microservices/go/pipeline/usagestore/store"
+	"github.com/safecility/microservices/go/pipeline/power/usagestore/messages"
+	"github.com/safecility/microservices/go/pipeline/power/usagestore/store"
 	"net/http"
 	"os"
 )

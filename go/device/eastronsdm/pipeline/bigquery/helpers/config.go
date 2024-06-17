@@ -14,11 +14,11 @@ const (
 type Config struct {
 	ProjectName string `json:"projectName"`
 	Topics      struct {
-		Hotdrop  string `json:"hotdrop"`
+		Eastron  string `json:"eastron"`
 		Bigquery string `json:"bigquery"`
 	} `json:"topics"`
 	Subscriptions struct {
-		Hotdrop string `json:"hotdrop"`
+		Eastron string `json:"eastron"`
 	} `json:"subscriptions"`
 	Schema struct {
 		Name     string `json:"name"`

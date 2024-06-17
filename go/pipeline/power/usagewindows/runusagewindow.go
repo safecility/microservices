@@ -54,6 +54,6 @@ func main() {
 		log.Fatal().Err(err).Msg("could not get datastore milesight")
 	}
 
-	usageServer := server.NewUsageServer(d, usageSubscription, config.StoreAll)
+	usageServer := server.NewUsageWindowServer(d, usageSubscription, config.StoreAll)
 	usageServer.Start()
 }

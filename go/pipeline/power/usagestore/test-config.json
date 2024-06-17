@@ -1,10 +1,10 @@
 {
   "projectName": "safecility-test",
   "topics": {
-    "milesight": "local-milesight"
+    "usage": "test-power-pipeline-usage"
   },
   "subscriptions": {
-    "milesight": "local-milesight-store-sub"
+    "usage": "test-power-pipeline-usage-sub"
   },
   "storeAll": true
 }

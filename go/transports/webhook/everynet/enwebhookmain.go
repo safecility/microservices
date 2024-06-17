@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	deployment, isSet := os.LookupEnv("Deployment")
+	deployment, isSet := os.LookupEnv(helpers.OSDeploymentKey)
 	if !isSet {
 		deployment = string(setup.Local)
 	}

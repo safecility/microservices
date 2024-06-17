@@ -2,6 +2,7 @@ package messages
 
 import (
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib"
 	"time"
 )
@@ -31,12 +32,17 @@ func (mc MilesightCTReading) Usage() (*MeterReading, error) {
 	if mc.PowerDevice == nil {
 		return nil, fmt.Errorf("device does not have its PowerDevice definitions")
 	}
-	kWh := float64(mc.Current.Total) * mc.Voltage * mc.PowerFactor
-	return &MeterReading{
+	if mc.PowerDevice.Device == nil {
+		log.Warn().Str("UID", mc.UID).Msg("device does not have device definitions")
+	}
+	kWh := float64(mc.Current.Total) * mc.Voltage * mc.PowerFactor / 1000.0
+	mr := &MeterReading{
 		Device:     mc.PowerDevice.Device,
 		ReadingKWH: kWh,
 		Time:       mc.Time,
-	}, nil
+	}
+
+	return mr, nil
 }
 
 type Alarms struct {

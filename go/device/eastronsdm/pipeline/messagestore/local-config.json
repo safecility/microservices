@@ -4,7 +4,7 @@
     "eastron": "local-eastron"
   },
   "subscriptions": {
-    "eastron": "local-eastron-sub"
+    "eastron": "local-eastron-datastore-sub"
   },
   "storeAll": false
 }

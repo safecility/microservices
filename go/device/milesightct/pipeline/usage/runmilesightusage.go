@@ -36,8 +36,8 @@ func main() {
 		return // this is here so golang doesn't complain about gpsClient being possibly nil
 	}
 
-	milesightTopic := gpsClient.Topic(config.Topics.Usage)
-	exists, err := milesightTopic.Exists(ctx)
+	usageTopic := gpsClient.Topic(config.Topics.Usage)
+	exists, err := usageTopic.Exists(ctx)
 	if !exists {
 		log.Fatal().Str("topic", config.Topics.Usage).Msg("no milesight topic found")
 	}
@@ -48,6 +48,6 @@ func main() {
 		log.Fatal().Str("subscription", config.Subscriptions.Milesight).Msg("no milesight subscription")
 	}
 
-	milesightServer := server.NewMilesightServer(milesightTopic, milesightSubscription)
+	milesightServer := server.NewMilesightServer(usageTopic, milesightSubscription)
 	milesightServer.Start()
 }

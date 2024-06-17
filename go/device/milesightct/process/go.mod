@@ -8,8 +8,8 @@ require (
 	cloud.google.com/go/pubsub v1.38.0
 	cloud.google.com/go/secretmanager v1.13.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240613094904-cf8d0617e3e2
-	github.com/safecility/go/setup v0.0.0-20240611085705-73f14e1faf61
+	github.com/safecility/go/lib v0.0.0-20240613143005-63ac091e0b72
+	github.com/safecility/go/setup v0.0.0-20240613143005-63ac091e0b72
 )
 
 require (

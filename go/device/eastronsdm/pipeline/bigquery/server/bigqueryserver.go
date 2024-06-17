@@ -6,34 +6,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/device/hotdrop/pipeline/bigquery/messages"
-	"github.com/safecility/microservices/go/device/hotdrop/pipeline/bigquery/protobuffer"
+	"github.com/safecility/microservices/go/device/eastronsdm/pipeline/bigquery/messages"
+	"github.com/safecility/microservices/go/device/eastronsdm/pipeline/bigquery/protobuffer"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"net/http"
 	"os"
 )
 
-type HotDropServer struct {
+type EastronServer struct {
 	sub      *pubsub.Subscription
 	pub      *pubsub.Topic
 	encoding pubsub.SchemaEncoding
 	storeAll bool
 }
 
-func NewHotDropServer(sub *pubsub.Subscription, pub *pubsub.Topic, storeAll bool) *HotDropServer {
-	return &HotDropServer{sub: sub, pub: pub, storeAll: storeAll}
-}
-
-func (es *HotDropServer) Start() {
-	go es.receive()
-	es.serverHttp()
-}
-
-func (es *HotDropServer) receive() {
+func (es *EastronServer) receive() {
 
 	err := es.sub.Receive(context.Background(), func(ctx context.Context, message *pubsub.Message) {
-		r := &messages.HotdropDeviceReading{}
+		r := &messages.EastronSdmReading{}
 
 		log.Debug().Str("data", fmt.Sprintf("%s", message.Data)).Msg("raw data")
 		err := json.Unmarshal(message.Data, r)
@@ -43,8 +34,8 @@ func (es *HotDropServer) receive() {
 			return
 		}
 
-		if r.PowerDevice == nil && es.storeAll == false {
-			log.Debug().Str("eui", r.DeviceEUI).Msg("skipping message as no device and storeAll == false")
+		if r.Device == nil && es.storeAll == false {
+			log.Debug().Str("eui", r.DeviceUID).Msg("skipping message as no device and storeAll == false")
 			return
 		}
 
@@ -62,7 +53,7 @@ func (es *HotDropServer) receive() {
 	}
 }
 
-func (es *HotDropServer) serverHttp() {
+func (es *EastronServer) serverHttp() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		_, err := fmt.Fprintf(w, "started")
 		if err != nil {
@@ -81,19 +72,19 @@ func (es *HotDropServer) serverHttp() {
 	}
 }
 
-func (es *HotDropServer) publishProtoMessages(hotDrop *protobuffer.Hotdrop) error {
+func (es *EastronServer) publishProtoMessages(eastron *protobuffer.EastronSdmBq) error {
 
 	var msg []byte
 	var err error
 
 	switch es.encoding {
 	case pubsub.EncodingBinary:
-		msg, err = proto.Marshal(hotDrop)
+		msg, err = proto.Marshal(eastron)
 		if err != nil {
 			return fmt.Errorf("proto.Marshal err: %v", err)
 		}
 	case pubsub.EncodingJSON:
-		msg, err = protojson.Marshal(hotDrop)
+		msg, err = protojson.Marshal(eastron)
 		if err != nil {
 			return fmt.Errorf("protojson.Marshal err: %v", err)
 		}
