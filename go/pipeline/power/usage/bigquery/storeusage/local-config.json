@@ -1,0 +1,22 @@
+{
+  "projectName": "safecility-test",
+  "pubsub": {
+    "topics": {
+      "usage": "local-power-pipeline-usage",
+      "bigquery": "local-usage-bigquery"
+    },
+    "subscriptions": {
+      "usage": "local-power-pipeline-usage-bigquery-sub",
+      "bigquery": "local-usage-bigquery-sub"
+    }
+  },
+  "bigQuery": {
+    "dataset": "energy",
+    "table": "local-usage",
+    "schema": {
+      "name": "bigquery-usage",
+      "filePath": "./protobuffer/usage.proto"
+    }
+  },
+  "storeAll": false
+}

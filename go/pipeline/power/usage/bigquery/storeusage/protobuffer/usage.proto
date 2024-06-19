@@ -1,0 +1,9 @@
+syntax = "proto3";
+package energy;
+option go_package = ".;protobuffer";
+
+message Usage {
+  string   DeviceUID                    = 1;
+  string   Time                         = 2;
+  double   ReadingKWH                   = 3;
+}

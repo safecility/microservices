@@ -22,7 +22,7 @@ type HotDropServer struct {
 }
 
 func NewHotDropServer(sub *pubsub.Subscription, pub *pubsub.Topic, storeAll bool) *HotDropServer {
-	return &HotDropServer{sub: sub, pub: pub, storeAll: storeAll}
+	return &HotDropServer{sub: sub, pub: pub, storeAll: storeAll, encoding: pubsub.EncodingBinary}
 }
 
 func (es *HotDropServer) Start() {

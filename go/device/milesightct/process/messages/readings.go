@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	mataChannel    byte = 0xff
+	metaChannel    byte = 0xff
 	totalChannel   byte = 0x03
 	currentChannel byte = 0x04
 	alarmChannel   byte = 0x84
@@ -73,7 +73,7 @@ func readSlice(r *MilesightCTReading, payload []byte, offset int) (int, error) {
 	channelID := payload[offset]
 	channelType := payload[offset+1]
 	switch channelID {
-	case mataChannel:
+	case metaChannel:
 		switch channelType {
 		case power:
 			r.Power = true
