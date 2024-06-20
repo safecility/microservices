@@ -52,7 +52,7 @@ func main() {
 
 	dsClient, err := datastore.NewClient(ctx, config.ProjectName)
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not start service")
+		log.Fatal().Err(err).Msg("could not get datastore client")
 	}
 	d, err := store.NewDatastoreUsage(dsClient)
 

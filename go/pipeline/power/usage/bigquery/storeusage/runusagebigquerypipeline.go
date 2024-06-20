@@ -47,7 +47,7 @@ func main() {
 		log.Fatal().Str("topic", config.Pubsub.Topics.Bigquery).Msg("Topic does not exist")
 	}
 
-	bigqueryServer := server.NewHotDropServer(sub, topic, config.StoreAll)
+	bigqueryServer := server.NewUsageServer(sub, topic, config.StoreAll)
 
 	bigqueryServer.Start()
 

@@ -20,7 +20,7 @@ type UsageServer struct {
 	storeAll bool
 }
 
-func NewHotDropServer(sub *pubsub.Subscription, pub *pubsub.Topic, storeAll bool) *UsageServer {
+func NewUsageServer(sub *pubsub.Subscription, pub *pubsub.Topic, storeAll bool) *UsageServer {
 	return &UsageServer{sub: sub, pub: pub, storeAll: storeAll, encoding: pubsub.EncodingBinary}
 }
 
