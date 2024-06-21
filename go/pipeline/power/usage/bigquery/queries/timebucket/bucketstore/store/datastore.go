@@ -5,7 +5,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/rs/zerolog/log"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket"
+	"github.com/safecility/go/lib/gbigquery"
 )
 
 type DatastoreBuckets struct {
@@ -16,7 +16,7 @@ func NewBucketDatastore(client *datastore.Client) *DatastoreBuckets {
 	return &DatastoreBuckets{client: client}
 }
 
-func (d *DatastoreBuckets) AddBucket(m *timebucket.UsageBucket, i *timebucket.BucketType) error {
+func (d *DatastoreBuckets) AddBucket(m *gbigquery.UsageBucket, i *gbigquery.BucketType) error {
 	ctx := context.Background()
 	k, err := d.GetBucketKey(m, i)
 	if err != nil {
@@ -30,38 +30,41 @@ func (d *DatastoreBuckets) AddBucket(m *timebucket.UsageBucket, i *timebucket.Bu
 	return nil
 }
 
-func (d *DatastoreBuckets) AddBuckets(m []timebucket.UsageBucket, i *timebucket.BucketType) error {
+func (d *DatastoreBuckets) AddBuckets(m []gbigquery.UsageBucket, ty *gbigquery.BucketType) error {
+	if m == nil || len(m) == 0 {
+		return fmt.Errorf("empty usageBuckets")
+	}
 	ctx := context.Background()
 
 	keys := make([]*datastore.Key, len(m))
-	for _, b := range m {
-		k, err := d.GetBucketKey(&b, i)
+	for i, b := range m {
+		k, err := d.GetBucketKey(&b, ty)
 		if err != nil {
 			return err
 		}
-		keys = append(keys, k)
+		keys[i] = k
 	}
 
 	ret, err := d.client.PutMulti(ctx, keys, m)
 	if err != nil {
 		return err
 	}
-	log.Debug().Str("put keys", fmt.Sprintf("%#v", ret)).Msg("success")
+	log.Debug().Str("put keys", fmt.Sprintf("%#v", ret)).Str("sample", fmt.Sprintf("%+v", ret[0])).Msg("success")
 
 	return nil
 }
 
-func (d *DatastoreBuckets) GetBucketKey(u *timebucket.UsageBucket, i *timebucket.BucketType) (*datastore.Key, error) {
+func (d *DatastoreBuckets) GetBucketKey(u *gbigquery.UsageBucket, i *gbigquery.BucketType) (*datastore.Key, error) {
 	var intervalKey string
 
 	switch i.Interval {
-	case timebucket.HOUR:
+	case gbigquery.HOUR:
 		intervalKey = fmt.Sprintf("%d-%d-%d %02d", u.Bucket.StartTime.Year(), u.Bucket.StartTime.Month(), u.Bucket.StartTime.Day(), u.Bucket.StartTime.Hour())
-	case timebucket.DAY:
+	case gbigquery.DAY:
 		intervalKey = fmt.Sprintf("%d:d%02d", u.Bucket.StartTime.Year(), u.Bucket.StartTime.YearDay())
 	}
 
 	name := fmt.Sprintf("%s_%s", u.DeviceUID, intervalKey)
 
-	return datastore.NameKey("MeterReading", name, nil), nil
+	return datastore.NameKey("BucketReading", name, nil), nil
 }

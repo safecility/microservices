@@ -29,7 +29,7 @@ func GetConfig(deployment string) *Config {
 
 	file, err := os.Open(fileName)
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not find config file")
+		log.Fatal().Err(err).Str("file", file.Name()).Msg("could not find config file")
 	}
 
 	defer func(file *os.File) {

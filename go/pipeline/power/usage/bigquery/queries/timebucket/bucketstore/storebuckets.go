@@ -4,10 +4,9 @@ import (
 	"cloud.google.com/go/bigquery"
 	"cloud.google.com/go/datastore"
 	"context"
-	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/lib/gbigquery"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket"
 	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/helpers"
 	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/server"
 	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/store"
@@ -22,7 +21,6 @@ func main() {
 	if !isSet {
 		deployment = string(setup.Local)
 	}
-	deployment = fmt.Sprintf("./bucketstore/%s", deployment)
 	config := helpers.GetConfig(deployment)
 
 	client, err := bigquery.NewClient(ctx, config.ProjectName)
@@ -45,22 +43,19 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to get table metadata")
 	}
 
-	du := timebucket.NewQueryServer(client, tableMetadata, config.BigQuery.Region)
-	//
-	//qi := &timebucket.QueryInterval{
-	//	Start: time.Now().Add(-time.Hour * 48),
-	//	End:   time.Now(),
-	//}
-	//
-	//tb := timebucket.BucketType{
-	//	Interval:   timebucket.HOUR,
-	//	Multiplier: 1,
-	//}
+	du := gbigquery.NewQueryServer(client, tableMetadata, config.BigQuery.Region)
 
 	dsClient, err := datastore.NewClient(ctx, config.ProjectName)
 	if err != nil {
 		log.Fatal().Err(err).Msg("could not get datastore client")
 	}
+
+	defer func(dsClient *datastore.Client) {
+		err = dsClient.Close()
+		if err != nil {
+			log.Error().Err(err).Msg("Failed to close datastore client")
+		}
+	}(dsClient)
 
 	bStore := store.NewBucketDatastore(dsClient)
 

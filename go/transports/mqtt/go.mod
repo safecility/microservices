@@ -6,9 +6,9 @@ require (
 	cloud.google.com/go/pubsub v1.38.0
 	cloud.google.com/go/secretmanager v1.13.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240607154519-49e765b402aa
-	github.com/safecility/go/mqtt v0.0.0-20240607154519-49e765b402aa
-	github.com/safecility/go/setup v0.0.0-20240607154519-49e765b402aa
+	github.com/safecility/go/lib latest
+	github.com/safecility/brokers latest
+	github.com/safecility/go/setup latest
 )
 
 require (

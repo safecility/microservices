@@ -11,6 +11,8 @@ cloud.google.com/go/compute/metadata v0.3.0 h1:Tz+eQXMEqDIKRsmY3cHTL6FVaynIjX2Qx
 cloud.google.com/go/compute/metadata v0.3.0/go.mod h1:zFmK7XCadkQkj6TtorcaGlCW1hT1fIilQDwofLpJ20k=
 cloud.google.com/go/datacatalog v1.20.1 h1:czcba5mxwRM5V//jSadyig0y+8aOHmN7gUl9GbHu59E=
 cloud.google.com/go/datacatalog v1.20.1/go.mod h1:Jzc2CoHudhuZhpv78UBAjMEg3w7I9jHA11SbRshWUjk=
+cloud.google.com/go/datastore v1.17.1 h1:6Me8ugrAOAxssGhSo8im0YSuy4YvYk4mbGvCadAH5aE=
+cloud.google.com/go/datastore v1.17.1/go.mod h1:mtzZ2HcVtz90OVrEXXGDc2pO4NM1kiBQy8YV4qGe0ZM=
 cloud.google.com/go/iam v1.1.8 h1:r7umDwhj+BQyz0ScZMp4QrGXjSTI3ZINnpgU2nlB/K0=
 cloud.google.com/go/iam v1.1.8/go.mod h1:GvE6lyMmfxXauzNq8NbgJbeVQNspG+tcdL/W8QO1+zE=
 cloud.google.com/go/longrunning v0.5.7 h1:WLbHekDbjK1fVFD3ibpFFVoyizlLRl73I7YKuAKilhU=
@@ -112,8 +114,10 @@ github.com/redis/go-redis/v9 v9.5.3/go.mod h1:hdY0cQFCN4fnSYT6TkisLufl/4W5UIXyv0
 github.com/rs/xid v1.5.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=
 github.com/rs/zerolog v1.33.0 h1:1cU2KZkvPxNyfgEmhHAz/1A9Bz+llsdYzklWFzgp0r8=
 github.com/rs/zerolog v1.33.0/go.mod h1:/7mN4D5sKwJLZQ2b/znpjC3/GQWY/xaDXUM0kKWRHss=
-github.com/safecility/go/setup v0.0.0-20240619082758-721deac8c5cf h1:DY13w419OwDGmFjNEXYwMvbZTWCiCrWZg0BusWzVfnU=
-github.com/safecility/go/setup v0.0.0-20240619082758-721deac8c5cf/go.mod h1:igLb0ZrgeSy2aJSeQumCcfm8XA1oEYmicdhirM6WJ88=
+github.com/safecility/go/lib v0.0.0-20240621105841-7c37ec9d3946 h1:N0WcUfQVB4PUD25VjGoxzx+vPPHleXtB/Mr0dMWsEPw=
+github.com/safecility/go/lib v0.0.0-20240621105841-7c37ec9d3946/go.mod h1:NivIuRrNQ+jXC9QNSAe+bUSoK4C6OHq8mVtr5CWW8gI=
+github.com/safecility/go/setup v0.0.0-20240621105841-7c37ec9d3946 h1:p9wT5Nv18FxrSKVoO41s0CB9es0SiuR0BNRFOgjYJRw=
+github.com/safecility/go/setup v0.0.0-20240621105841-7c37ec9d3946/go.mod h1:igLb0ZrgeSy2aJSeQumCcfm8XA1oEYmicdhirM6WJ88=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=

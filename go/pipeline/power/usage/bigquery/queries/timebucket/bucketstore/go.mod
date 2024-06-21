@@ -1,12 +1,13 @@
-module github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket
+module github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore
 
 go 1.21
 
 require (
 	cloud.google.com/go/bigquery v1.61.0
+	cloud.google.com/go/datastore v1.17.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/setup v0.0.0-20240619082758-721deac8c5cf
-	google.golang.org/api v0.183.0
+	github.com/safecility/go/lib v0.0.0-20240621105841-7c37ec9d3946
+	github.com/safecility/go/setup v0.0.0-20240621105841-7c37ec9d3946
 )
 
 require (
@@ -56,6 +57,7 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.20.0 // indirect
 	golang.org/x/xerrors v0.0.0-20231012003039-104605ab7028 // indirect
+	google.golang.org/api v0.183.0 // indirect
 	google.golang.org/genproto v0.0.0-20240617180043-68d350f18fd4 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240610135401-a8a62080eff3 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240610135401-a8a62080eff3 // indirect
