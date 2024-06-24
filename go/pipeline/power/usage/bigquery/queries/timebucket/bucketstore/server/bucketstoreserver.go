@@ -33,7 +33,7 @@ func (bss *BucketStoreServer) storeQuery() (int, error) {
 		Start: time.Time{},
 		End:   time.Time{},
 	}
-	r, err := bss.queryServer.RunQuery(t, i)
+	r, err := bss.queryServer.RunPowerUsageQuery(t, i)
 	if err != nil {
 		return 0, err
 	}
@@ -53,6 +53,8 @@ func (bss *BucketStoreServer) serverHttp() {
 	})
 
 	http.HandleFunc("/hours/previous", bss.handlePreviousHour)
+
+	http.HandleFunc("/days/previous", bss.handlePreviousDay)
 
 	port := os.Getenv("PORT")
 	if port == "" {

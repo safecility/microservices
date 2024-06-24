@@ -58,15 +58,15 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 		log.Info().Msg("created bigquery subscription")
 	}
 
-	milesightSubscription := gpsClient.Subscription(config.Pubsub.Subscriptions.Usage)
-	exists, err = milesightSubscription.Exists(ctx)
+	usageSubscription := gpsClient.Subscription(config.Pubsub.Subscriptions.Usage)
+	exists, err = usageSubscription.Exists(ctx)
 	if !exists {
-		milesightTopic := gpsClient.Topic(config.Pubsub.Topics.Usage)
-		if exists, err = milesightTopic.Exists(ctx); err != nil {
+		usageTopic := gpsClient.Topic(config.Pubsub.Topics.Usage)
+		if exists, err = usageTopic.Exists(ctx); err != nil {
 			log.Fatal().Err(err).Msg("could not check if milesight topic exists")
 		}
 		if !exists {
-			milesightTopic, err = createBigqueryTopic(gpsClient, config.Pubsub.Topics.Usage, schema)
+			usageTopic, err = createBigqueryTopic(gpsClient, config.Pubsub.Topics.Usage, schema)
 			if err != nil {
 				log.Fatal().Err(err).Msg("could not create milesight topic")
 			}
@@ -77,11 +77,12 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not parse duration")
 		}
-		subConfig := stream.GetDefaultSubscriptionConfig(milesightTopic, r)
-		milesightSubscription, err = gpsClient.CreateSubscription(ctx, config.Pubsub.Subscriptions.Usage, subConfig)
+		subConfig := stream.GetDefaultSubscriptionConfig(usageTopic, r)
+		usageSubscription, err = gpsClient.CreateSubscription(ctx, config.Pubsub.Subscriptions.Usage, subConfig)
 		if err != nil {
 			log.Fatal().Err(err).Msg("setup could not create subscription")
 		}
+		log.Info().Msg("created usage topic")
 	}
 	log.Info().Msg("finished pubsub setup")
 }

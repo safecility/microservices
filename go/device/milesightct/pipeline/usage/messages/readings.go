@@ -35,6 +35,9 @@ func (mc MilesightCTReading) Usage() (*MeterReading, error) {
 	if mc.PowerDevice.Device == nil {
 		log.Warn().Str("UID", mc.UID).Msg("device does not have device definitions")
 	}
+	if mc.Current.Total == 0 {
+		log.Info().Str("reading", fmt.Sprintf("%+v", mc)).Msg("zero usage - check device is new")
+	}
 	kWh := float64(mc.Current.Total) * mc.Voltage * mc.PowerFactor / 1000.0
 	mr := &MeterReading{
 		Device:     mc.PowerDevice.Device,

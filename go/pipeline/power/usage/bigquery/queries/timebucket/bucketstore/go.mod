@@ -6,8 +6,8 @@ require (
 	cloud.google.com/go/bigquery v1.61.0
 	cloud.google.com/go/datastore v1.17.1
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240621105841-7c37ec9d3946
-	github.com/safecility/go/setup v0.0.0-20240621105841-7c37ec9d3946
+	github.com/safecility/go/lib v0.0.0-20240624093135-5a7b78dc326a
+	github.com/safecility/go/setup v0.0.0-20240624093135-5a7b78dc326a
 )
 
 require (
