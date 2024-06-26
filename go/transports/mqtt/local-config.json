@@ -13,8 +13,8 @@
     "version": 1
   },
   "topics": {
-    "joins": "local-milesight-joins",
-    "uplinks": "local-milesight-uplinks",
-    "signal": "local-milesight-signal"
+    "joins": "**-joins",
+    "uplinks": "**-uplinks",
+    "signal": "**-signal"
   }
 }

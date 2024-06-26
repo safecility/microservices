@@ -48,7 +48,7 @@ func main() {
 		if err != nil {
 			log.Fatal().Err(err).Msg("setup could not create subscription")
 		}
-		log.Info().Str("topic", usageSubscription.String()).Msg("created subscription")
+		log.Info().Str("sub", usageSubscription.String()).Msg("created subscription")
 	}
 
 	log.Info().Msg("setup complete")

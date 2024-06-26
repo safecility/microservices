@@ -8,8 +8,8 @@ require (
 	cloud.google.com/go/datastore v1.17.1
 	cloud.google.com/go/pubsub v1.39.0
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/go/lib v0.0.0-20240619082758-721deac8c5cf
-	github.com/safecility/go/setup v0.0.0-20240613143005-63ac091e0b72
+	github.com/safecility/go/lib v0.0.0-20240626114119-46c9350d675c
+	github.com/safecility/go/setup v0.0.0-20240626114119-46c9350d675c
 )
 
 require (
@@ -34,7 +34,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.12.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
-	github.com/redis/go-redis/v9 v9.5.1 // indirect
+	github.com/redis/go-redis/v9 v9.5.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect
@@ -51,7 +51,7 @@ require (
 	google.golang.org/api v0.184.0 // indirect
 	google.golang.org/genproto v0.0.0-20240604185151-ef581f913117 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20240610135401-a8a62080eff3 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20240604185151-ef581f913117 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240610135401-a8a62080eff3 // indirect
 	google.golang.org/grpc v1.64.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 )

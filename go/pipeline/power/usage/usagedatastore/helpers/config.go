@@ -14,8 +14,7 @@ const (
 type Config struct {
 	ProjectName string `json:"projectName"`
 	Topics      struct {
-		Usage    string `json:"usage"`
-		BigQuery string `json:"bigQuery"`
+		Usage string `json:"usage"`
 	} `json:"topics"`
 	Subscriptions struct {
 		Usage string `json:"usage"`

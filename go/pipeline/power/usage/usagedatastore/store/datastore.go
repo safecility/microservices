@@ -23,6 +23,8 @@ func (d *DatastoreUsage) AddMeterReading(m *messages.MeterReading) error {
 	if err != nil {
 		return err
 	}
-	log.Debug().Str("uid", m.DeviceUID).Msg("putting new meter reading")
+	if m.Device != nil {
+		log.Debug().Str("uid", m.DeviceUID).Msg("putting new meter reading")
+	}
 	return nil
 }

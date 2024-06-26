@@ -38,14 +38,8 @@ func main() {
 		return // this is here so golang doesn't complain about gpsClient being possibly nil
 	}
 
-	bigQueryTopic := gpsClient.Topic(config.Topics.BigQuery)
-	exists, err := bigQueryTopic.Exists(ctx)
-	if !exists {
-		log.Fatal().Str("subscription", config.Topics.BigQuery).Msg("no topic found")
-	}
-
 	usageSubscription := gpsClient.Subscription(config.Subscriptions.Usage)
-	exists, err = usageSubscription.Exists(ctx)
+	exists, err := usageSubscription.Exists(ctx)
 	if !exists {
 		log.Fatal().Str("subscription", config.Subscriptions.Usage).Msg("no subscription found")
 	}
@@ -57,7 +51,7 @@ func main() {
 	d, err := store.NewDatastoreUsage(dsClient)
 
 	if err != nil {
-		log.Fatal().Err(err).Msg("could not get datastore milesight")
+		log.Fatal().Err(err).Msg("could not get datastore for usage")
 	}
 
 	usageServer := server.NewUsageServer(d, usageSubscription, config.StoreAll)

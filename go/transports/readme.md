@@ -33,3 +33,7 @@ type LoraMessage struct {
 
 Now microservices can access the SimpleMessage as usual 
 and a microservice with knowledge of the specific transport mechanism can parse the necessary fields
+
+### Device specific transports
+
+If a webhook is specific to a device we now move that to the device's repo
