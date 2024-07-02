@@ -104,6 +104,7 @@ github.com/safecility/go/lib v0.0.0-20240626114119-46c9350d675c h1:DMCVpoJgep4+n
 github.com/safecility/go/lib v0.0.0-20240626114119-46c9350d675c/go.mod h1:ssArEyKZF2/9uD6R0TACgL0e6o58nJligQbsVK793eI=
 github.com/safecility/go/setup v0.0.0-20240624102715-b6e0a55fbdf4 h1:Vg3/Mus5WL6BNE9mrzeht6NPUTK9Yljb5OQNyPw72gc=
 github.com/safecility/go/setup v0.0.0-20240624102715-b6e0a55fbdf4/go.mod h1:4Ni7IMfyu0lb3mWAm9vKW0mZQ5ENc5tJrkLK9NHQdC8=
+github.com/safecility/go/setup v0.0.0-20240626114119-46c9350d675c/go.mod h1:4Ni7IMfyu0lb3mWAm9vKW0mZQ5ENc5tJrkLK9NHQdC8=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0/go.mod h1:Yh+to48EsGEfYuaHDzXPcE3xhTkx73EhmCGUpEOglKo=
