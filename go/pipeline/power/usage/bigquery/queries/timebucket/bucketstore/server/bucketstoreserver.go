@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/gbigquery"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/query"
 	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/store"
 	"net/http"
 	"os"
@@ -11,11 +12,11 @@ import (
 )
 
 type BucketStoreServer struct {
-	queryServer *gbigquery.QueryServer
+	queryServer *query.QueryServer
 	store       *store.DatastoreBuckets
 }
 
-func NewBucketStoreServer(queryServer *gbigquery.QueryServer, store *store.DatastoreBuckets) *BucketStoreServer {
+func NewBucketStoreServer(queryServer *query.QueryServer, store *store.DatastoreBuckets) *BucketStoreServer {
 	return &BucketStoreServer{queryServer: queryServer, store: store}
 }
 

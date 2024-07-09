@@ -15,4 +15,4 @@ everynet provides LoRA message delivery through a webhook api
 ### Vutility
 vutility provides a generalized sensor message -> we provide a process microservice to interpret the data from Vutility's
 hotdrop device -> as the Vutility API is only used by us for the Hotdrop device its webhook has moved to the hotdrop device
-repo http://github.com/
+repo https://github.com/safecility/hotdrop/
