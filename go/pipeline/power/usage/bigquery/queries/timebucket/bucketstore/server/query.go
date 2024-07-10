@@ -1,4 +1,4 @@
-package query
+package server
 
 import (
 	"cloud.google.com/go/bigquery"
@@ -66,7 +66,6 @@ func (dus QueryServer) readRow(r []bigquery.Value) (*UsageBucket, error) {
 
 // RunPowerUsageQuery pass the required BucketType and QueryInterval, the query uses TIMESTAMP_BUCKET and finds max and min
 // values within the buckets
-// TODO obviously this shouldn't be here - move to within
 func (dus QueryServer) RunPowerUsageQuery(bucket gbigquery.BucketType, interval *gbigquery.QueryInterval) ([]UsageBucket, error) {
 	ctx := context.Background()
 

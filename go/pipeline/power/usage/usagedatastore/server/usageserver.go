@@ -40,11 +40,6 @@ func (es *UsageServer) receive() {
 			return
 		}
 
-		if r.Device == nil && es.storeAll == false {
-			log.Debug().Msg("skipping message as no device and storeAll == false")
-			return
-		}
-
 		go func() {
 			crr := es.store.AddMeterReading(r)
 			if crr != nil {

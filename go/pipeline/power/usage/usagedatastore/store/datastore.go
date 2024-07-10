@@ -18,13 +18,13 @@ func NewDatastoreUsage(client *datastore.Client) (*DatastoreUsage, error) {
 
 func (d *DatastoreUsage) AddMeterReading(m *messages.MeterReading) error {
 	ctx := context.Background()
-	k := datastore.IncompleteKey("MeterReading", nil)
+	k := datastore.IncompleteKey("TestMeterReading", nil)
 	k, err := d.client.Put(ctx, k, m)
 	if err != nil {
 		return err
 	}
-	if m.Device != nil {
-		log.Debug().Str("uid", m.DeviceUID).Msg("putting new meter reading")
-	}
+
+	log.Debug().Str("uid", m.DeviceUID).Msg("put new meter reading")
+
 	return nil
 }

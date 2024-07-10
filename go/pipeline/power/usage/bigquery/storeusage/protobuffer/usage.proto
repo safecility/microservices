@@ -6,4 +6,10 @@ message Usage {
   string   DeviceUID                    = 1;
   string   Time                         = 2;
   double   ReadingKWH                   = 3;
+  string   DeviceName                   = 4;
+  string   DeviceTag                    = 5;
+  string   CompanyUID                   = 6;
+  string   LocationUID                  = 7;
+  string   SystemUID                    = 8;
+  string   TenantUID                    = 9;
 }

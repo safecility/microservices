@@ -4,11 +4,10 @@ import (
 	"cloud.google.com/go/bigquery"
 	"cloud.google.com/go/pubsub"
 	"context"
-	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/lib/gbigquery"
 	"github.com/safecility/go/lib/stream"
 	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/store/helpers"
-	"os"
 	"time"
 )
 
@@ -28,9 +27,15 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 
 	schema, err := sClient.Schema(ctx, config.BigQuery.Schema.Name, pubsub.SchemaViewFull)
 	if err != nil || schema == nil {
-		schema, err = createProtoSchema(sClient, config.BigQuery.Schema.Name, config.BigQuery.Schema.FilePath)
+		schema, err = gbigquery.CreateProtoSchema(sClient, config.BigQuery.Schema.Name, config.BigQuery.Schema.FilePath)
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not create schema")
+		}
+	}
+	if schema.RevisionID != config.BigQuery.Schema.Revision {
+		schema, err = gbigquery.UpdateProtoSchema(sClient, schema.Name, config.BigQuery.Schema.Revision, config.BigQuery.Schema.FilePath)
+		if err != nil {
+			log.Fatal().Err(err).Msg("could not update schema")
 		}
 	}
 
@@ -42,7 +47,7 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 	bigqueryTopic := gpsClient.Topic(config.Pubsub.Topics.Bigquery)
 	exists, err := bigqueryTopic.Exists(ctx)
 	if !exists {
-		bigqueryTopic, err = createBigqueryTopic(gpsClient, config.Pubsub.Topics.Bigquery, schema)
+		bigqueryTopic, err = gbigquery.CreateBigqueryTopic(gpsClient, config.Pubsub.Topics.Bigquery, schema)
 		if err != nil {
 			log.Fatal().Str("sub", config.Pubsub.Subscriptions.BigQuery).Err(err).Msg("could not create bigquery topic")
 		}
@@ -51,7 +56,7 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 	bigQuerySubscription := gpsClient.Subscription(config.Pubsub.Subscriptions.BigQuery)
 	exists, err = bigQuerySubscription.Exists(ctx)
 	if !exists {
-		err = createBigQuerySubscription(gpsClient, config.Pubsub.Subscriptions.BigQuery, t.FullID, bigqueryTopic)
+		err = gbigquery.CreateBigQuerySubscription(gpsClient, config.Pubsub.Subscriptions.BigQuery, t.FullID, bigqueryTopic)
 		if err != nil {
 			log.Fatal().Err(err).Msg("could not create bigquery subscription")
 		}
@@ -66,7 +71,7 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 			log.Fatal().Err(err).Msg("could not check if milesight topic exists")
 		}
 		if !exists {
-			usageTopic, err = createBigqueryTopic(gpsClient, config.Pubsub.Topics.Usage, schema)
+			usageTopic, err = gbigquery.CreateBigqueryTopic(gpsClient, config.Pubsub.Topics.Usage, schema)
 			if err != nil {
 				log.Fatal().Err(err).Msg("could not create milesight topic")
 			}
@@ -87,60 +92,61 @@ func SetupPubsub(config *helpers.Config, t *bigquery.TableMetadata) {
 	log.Info().Msg("finished pubsub setup")
 }
 
-// createProtoSchema creates a schema resource from a schema proto file.
-func createProtoSchema(client *pubsub.SchemaClient, schemaID, protoFile string) (*pubsub.SchemaConfig, error) {
-	protoSource, err := os.ReadFile(protoFile)
-	if err != nil {
-		return nil, fmt.Errorf("error reading from file: %s", protoFile)
-	}
-
-	config := pubsub.SchemaConfig{
-		Type:       pubsub.SchemaProtocolBuffer,
-		Definition: string(protoSource),
-	}
-
-	ctx := context.Background()
-	s, err := client.CreateSchema(ctx, schemaID, config)
-	if err != nil {
-		return nil, fmt.Errorf("CreateSchema: %w", err)
-	}
-	log.Debug().Str("schema", s.Name).Msg("Schema created")
-	return s, nil
-}
-
-func createBigqueryTopic(client *pubsub.Client, topicName string, schema *pubsub.SchemaConfig) (*pubsub.Topic, error) {
-	ctx := context.Background()
-	bigqueryTopic, err := client.CreateTopicWithConfig(ctx, topicName, &pubsub.TopicConfig{
-		SchemaSettings: &pubsub.SchemaSettings{
-			Schema:   schema.Name,
-			Encoding: pubsub.EncodingBinary,
-		},
-	})
-	if err != nil {
-		log.Fatal().Err(err).Msg("setup could not create topic")
-	}
-	log.Info().Str("topic", bigqueryTopic.String()).Msg("created topic")
-
-	return bigqueryTopic, nil
-}
-
-// createBigQuerySubscription creates a Pub/Sub subscription that exports messages to BigQuery.
-func createBigQuerySubscription(client *pubsub.Client, subscriptionName, table string, topic *pubsub.Topic) error {
-	ctx := context.Background()
-
-	sub, err := client.CreateSubscription(ctx, subscriptionName, pubsub.SubscriptionConfig{
-		Topic: topic,
-		BigQueryConfig: pubsub.BigQueryConfig{
-			Table:             table,
-			WriteMetadata:     false,
-			UseTopicSchema:    true,
-			DropUnknownFields: true,
-		},
-	})
-	if err != nil {
-		return err
-	}
-	log.Debug().Str("subscription", sub.ID()).Msg("Created BigQuery subscription")
-
-	return nil
-}
+//
+//// createProtoSchema creates a schema resource from a schema proto file.
+//func createProtoSchema(client *pubsub.SchemaClient, schemaID, protoFile string) (*pubsub.SchemaConfig, error) {
+//	protoSource, err := os.ReadFile(protoFile)
+//	if err != nil {
+//		return nil, fmt.Errorf("error reading from file: %s", protoFile)
+//	}
+//
+//	config := pubsub.SchemaConfig{
+//		Type:       pubsub.SchemaProtocolBuffer,
+//		Definition: string(protoSource),
+//	}
+//
+//	ctx := context.Background()
+//	s, err := client.CreateSchema(ctx, schemaID, config)
+//	if err != nil {
+//		return nil, fmt.Errorf("CreateSchema: %w", err)
+//	}
+//	log.Debug().Str("schema", s.Name).Msg("Schema created")
+//	return s, nil
+//}
+//
+//func createBigqueryTopic(client *pubsub.Client, topicName string, schema *pubsub.SchemaConfig) (*pubsub.Topic, error) {
+//	ctx := context.Background()
+//	bigqueryTopic, err := client.CreateTopicWithConfig(ctx, topicName, &pubsub.TopicConfig{
+//		SchemaSettings: &pubsub.SchemaSettings{
+//			Schema:   schema.Name,
+//			Encoding: pubsub.EncodingBinary,
+//		},
+//	})
+//	if err != nil {
+//		log.Fatal().Err(err).Msg("setup could not create topic")
+//	}
+//	log.Info().Str("topic", bigqueryTopic.String()).Msg("created topic")
+//
+//	return bigqueryTopic, nil
+//}
+//
+//// createBigQuerySubscription creates a Pub/Sub subscription that exports messages to BigQuery.
+//func createBigQuerySubscription(client *pubsub.Client, subscriptionName, table string, topic *pubsub.Topic) error {
+//	ctx := context.Background()
+//
+//	sub, err := client.CreateSubscription(ctx, subscriptionName, pubsub.SubscriptionConfig{
+//		Topic: topic,
+//		BigQueryConfig: pubsub.BigQueryConfig{
+//			Table:             table,
+//			WriteMetadata:     false,
+//			UseTopicSchema:    true,
+//			DropUnknownFields: true,
+//		},
+//	})
+//	if err != nil {
+//		return err
+//	}
+//	log.Debug().Str("subscription", sub.ID()).Msg("Created BigQuery subscription")
+//
+//	return nil
+//}

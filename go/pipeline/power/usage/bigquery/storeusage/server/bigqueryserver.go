@@ -42,18 +42,14 @@ func (es *UsageServer) receive() {
 			return
 		}
 
-		if r.Device == nil && es.storeAll == false {
-			log.Debug().Str("eui", r.DeviceUID).Msg("skipping message as no device and storeAll == false")
-			return
-		}
-
 		go func() {
 			m := protobuffer.CreateProtobufMessage(r)
-			r, crr := stream.PublishProtoToTopic(m, es.encoding, es.pub)
+			result, crr := stream.PublishProtoToTopic(m, es.encoding, es.pub)
 			if crr != nil {
-				log.Err(crr).Msg("could not add milesight data")
+				log.Err(crr).Msg("could not add proto data")
+				return
 			}
-			log.Debug().Str("result", *r).Msg("published milesight data")
+			log.Debug().Str("result", *result).Msg("published proto data")
 		}()
 	})
 	if err != nil {

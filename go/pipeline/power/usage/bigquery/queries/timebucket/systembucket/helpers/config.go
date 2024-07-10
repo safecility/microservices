@@ -13,24 +13,10 @@ const (
 
 type Config struct {
 	ProjectName string `json:"projectName"`
-	Pubsub      struct {
-		Topics struct {
-			Usage    string `json:"usage"`
-			Bigquery string `json:"bigquery"`
-		} `json:"topics"`
-		Subscriptions struct {
-			BigQuery string `json:"bigquery"`
-			Usage    string `json:"usage"`
-		} `json:"subscriptions"`
-	} `json:"pubsub"`
-	BigQuery struct {
+	BigQuery    struct {
 		Dataset string `json:"dataset"`
 		Table   string `json:"table"`
-		Schema  struct {
-			Name     string `json:"name"`
-			Revision string `json:"revision"`
-			FilePath string `json:"filePath"`
-		} `json:"schema"`
+		Region  string `json:"region"`
 	} `json:"bigQuery"`
 	StoreAll bool `json:"storeAll"`
 }

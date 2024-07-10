@@ -12,4 +12,4 @@ These microservices operate on the stored values
 * Create time-bucket views of data
 * Analysis of meter readings
 
-Time-bucket queries reuse a simple query lib and 
+Time-bucket queries reuse a simple query lib 
