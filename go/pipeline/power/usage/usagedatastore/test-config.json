@@ -6,5 +6,8 @@
   "subscriptions": {
     "usage": "test-power-pipeline-usage-sub"
   },
-  "storeAll": true
+  "store": {
+    "entity": "MeterReading",
+    "storeAll": true
+  }
 }

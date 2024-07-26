@@ -32,18 +32,18 @@ func (es *UsageServer) receive() {
 	err := es.sub.Receive(context.Background(), func(ctx context.Context, message *pubsub.Message) {
 		r := &messages.MeterReading{}
 
-		log.Debug().Str("data", fmt.Sprintf("%s", message.Data)).Msg("raw data")
 		err := json.Unmarshal(message.Data, r)
 		message.Ack()
 		if err != nil {
-			log.Err(err).Msg("could not unmarshall data")
+			log.Err(err).Str("data", fmt.Sprintf("%s", message.Data)).Msg("could not unmarshall data")
 			return
 		}
+		log.Debug().Str("reading", fmt.Sprintf("%+v", r)).Msg("received message")
 
 		go func() {
 			crr := es.store.AddMeterReading(r)
 			if crr != nil {
-				log.Err(crr).Msg("could not add hotdrop data")
+				log.Err(crr).Msg("could not add meter reading")
 			}
 		}()
 	})

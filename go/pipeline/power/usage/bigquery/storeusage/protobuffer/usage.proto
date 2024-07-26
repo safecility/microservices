@@ -12,4 +12,5 @@ message Usage {
   string   LocationUID                  = 7;
   string   SystemUID                    = 8;
   string   TenantUID                    = 9;
+  string   GroupUID                     = 10;
 }

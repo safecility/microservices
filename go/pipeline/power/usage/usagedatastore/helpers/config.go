@@ -19,7 +19,10 @@ type Config struct {
 	Subscriptions struct {
 		Usage string `json:"usage"`
 	} `json:"subscriptions"`
-	StoreAll bool `json:"storeAll"`
+	Store struct {
+		Entity   string `json:"entity"`
+		StoreAll bool   `json:"storeAll"`
+	} `json:"store"`
 }
 
 // GetConfig creates a config for the specified deployment

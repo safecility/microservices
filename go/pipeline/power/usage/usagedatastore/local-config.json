@@ -6,5 +6,8 @@
   "subscriptions": {
     "usage": "local-power-pipeline-usage-sub"
   },
-  "storeAll": true
+  "store": {
+    "entity": "TestMeterReading",
+    "storeAll": true
+  }
 }

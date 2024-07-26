@@ -20,5 +20,18 @@ type MeterReading struct {
 	ReadingKWH float64
 	Time       time.Time
 
-	Listing *Listing `datastore:",flatten,omitempty"`
+	Listing    *Listing   `datastore:",flatten,omitempty"`
+	Processors *Processor `datastore:",omitempty"`
+}
+
+type Processor struct {
+	Phase struct {
+		PhaseName string `datastore:",omitempty"`
+		PhaseUID  string `datastore:",omitempty"`
+	}
+	System struct {
+		SystemUID  string `datastore:",omitempty"`
+		SystemName string `datastore:",omitempty"`
+		SystemType string `datastore:",omitempty"`
+	}
 }

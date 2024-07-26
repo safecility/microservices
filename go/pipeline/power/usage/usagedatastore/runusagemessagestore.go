@@ -48,12 +48,12 @@ func main() {
 	if err != nil {
 		log.Fatal().Err(err).Msg("could not get datastore client")
 	}
-	d, err := store.NewDatastoreUsage(dsClient)
+	d, err := store.NewDatastoreUsage(dsClient, config.Store.Entity)
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("could not get datastore for usage")
 	}
 
-	usageServer := server.NewUsageServer(d, usageSubscription, config.StoreAll)
+	usageServer := server.NewUsageServer(d, usageSubscription, config.Store.StoreAll)
 	usageServer.Start()
 }
