@@ -35,8 +35,9 @@ func BigQueryTableMetadata(name string) *bigquery.TableMetadata {
 		{Name: "CompanyUID", Type: bigquery.StringFieldType},
 		{Name: "LocationUID", Type: bigquery.StringFieldType},
 
-		{Name: "SystemUID", Type: bigquery.StringFieldType},
-		{Name: "TenantUID", Type: bigquery.StringFieldType},
+		{Name: "SystemUID", Type: bigquery.StringFieldType, Required: false},
+		{Name: "TenantUID", Type: bigquery.StringFieldType, Required: false},
+		{Name: "GroupUID", Type: bigquery.StringFieldType, Required: false},
 	}
 
 	return &bigquery.TableMetadata{

@@ -8,7 +8,17 @@ import (
 
 func CreateProtobufMessage(r *messages.MeterReading) *Usage {
 
-	var systemUID, tenantUID, groupUID string
+	usage := &Usage{
+		DeviceUID:  r.DeviceUID,
+		Time:       r.Time.Format(time.RFC3339),
+		ReadingKWH: r.ReadingKWH,
+
+		DeviceName:  r.DeviceName,
+		DeviceTag:   r.DeviceTag,
+		CompanyUID:  r.CompanyUID,
+		LocationUID: r.LocationUID,
+	}
+
 	if r.Processors != nil {
 		for k, p := range *r.Processors {
 			var uid string
@@ -24,33 +34,20 @@ func CreateProtobufMessage(r *messages.MeterReading) *Usage {
 
 			switch k {
 			case "Solar":
-				systemUID = uid
+				usage.SystemUID = &uid
 				break
 			case "Phase":
-				systemUID = uid
+				usage.SystemUID = &uid
 				break
 			case "Tenant":
-				tenantUID = uid
+				usage.TenantUID = &uid
 				break
 			case "Group":
-				groupUID = uid
+				usage.GroupUID = &uid
 				break
 			}
 		}
 	}
 
-	return &Usage{
-		DeviceUID:  r.DeviceUID,
-		Time:       r.Time.Format(time.RFC3339),
-		ReadingKWH: r.ReadingKWH,
-
-		DeviceName:  r.DeviceName,
-		DeviceTag:   r.DeviceTag,
-		CompanyUID:  r.CompanyUID,
-		LocationUID: r.LocationUID,
-
-		SystemUID: systemUID,
-		TenantUID: tenantUID,
-		GroupUID:  groupUID,
-	}
+	return usage
 }

@@ -6,11 +6,22 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/gbigquery"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/systembucket/messages"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/groupbucket/messages"
 	"google.golang.org/api/iterator"
 	"strings"
 	"time"
 )
+
+//SELECT GroupUID, SUM(kWh) as kWh, SUM(readings) as readings, bucket from (
+//SELECT DeviceUID, GroupUID, (max - min) as kWh, readings, first_reading, last_reading, bucket from (
+//SELECT DeviceUID, GroupUID, Max(ReadingKWH) as max, Min(ReadingKWH) as min, Min(Time) as first_reading, Max(Time) as last_reading, count(*) as readings, TIMESTAMP_BUCKET(Time, INTERVAL 1 DAY) AS bucket
+//FROM `safecility-test.energy.local-usage`
+//WHERE GroupUID IS NOT NULL
+//GROUP BY DeviceUID, GroupUID, bucket
+//)
+//)
+//GROUP BY GroupUID, bucket
+//ORDER BY bucket
 
 type QueryServer struct {
 	client        *bigquery.Client
@@ -49,16 +60,17 @@ func (dus QueryServer) RunPowerUsageQuery(bucket gbigquery.BucketType, interval 
 	//the FullID replacement is because of really terrible api work by google
 	from := fmt.Sprintf("`%s` ", strings.Replace(dus.queryTable.FullID, ":", ".", 1))
 	if interval != nil {
-		from = fmt.Sprintf(`%s WHERE Time > Timestamp("%s") AND time < Timestamp("%s") AND SystemUID != ""`, from, interval.Start.UTC().Format("2006-01-02 15:04:05"), interval.End.UTC().Format("2006-01-02 15:04:05"))
+		from = fmt.Sprintf(`%s WHERE Time > Timestamp("%s") AND time < Timestamp("%s") AND GroupUID IS NOT NULL`, from, interval.Start.UTC().Format("2006-01-02 15:04:05"), interval.End.UTC().Format("2006-01-02 15:04:05"))
 	} else {
-		from = fmt.Sprintf(`%s WHERE SystemUID != ""`, from)
+		from = fmt.Sprintf(`%s WHERE GroupUID IS NOT NULL`, from)
 	}
+
 	//very hard to get goland not to interpret this as sql hence the "SELECT " +
 	query := "SELECT " +
-		`SystemUID,  SUM(kWh) as kWh, bucket from ( SELECT DeviceUID, SystemUID, (max - min) as kWh, bucket from ( SELECT ` +
-		fmt.Sprintf(`SystemUID, DeviceUID, Max(ReadingKWH) as max, Min(ReadingKWH) as min, TIMESTAMP_BUCKET(Time, INTERVAL %d %s) AS bucket 
-	FROM %s GROUP BY SystemUID, DeviceUID, bucket`, bucket.Multiplier, bucket.Interval, from) +
-		") ) GROUP BY SystemUID, bucket ORDER BY bucket"
+		`GroupUID,  SUM(kWh) as kWh, bucket from ( SELECT DeviceUID, GroupUID, (max - min) as kWh, bucket from ( SELECT ` +
+		fmt.Sprintf(`GroupUID, DeviceUID, Max(ReadingKWH) as max, Min(ReadingKWH) as min, TIMESTAMP_BUCKET(Time, INTERVAL %d %s) AS bucket 
+	FROM %s GROUP BY GroupUID, DeviceUID, bucket`, bucket.Multiplier, bucket.Interval, from) +
+		") ) GROUP BY GroupUID, bucket ORDER BY bucket"
 
 	log.Debug().Str("query", query).Msg("about to run")
 

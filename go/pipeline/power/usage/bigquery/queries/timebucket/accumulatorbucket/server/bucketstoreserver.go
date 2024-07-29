@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
+	"github.com/julienschmidt/httprouter"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/gbigquery"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/store"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/accumulator/store"
 	"net/http"
 	"os"
 	"time"
@@ -24,7 +25,7 @@ func (bss *BucketStoreServer) Start() {
 }
 
 // storeQuery TODO parse requests and call
-func (bss *BucketStoreServer) storeQuery() (int, error) {
+func (bss *BucketStoreServer) storeQuery(accumulator string) (int, error) {
 	t := gbigquery.BucketType{
 		Interval:   "",
 		Multiplier: 0,
@@ -33,7 +34,7 @@ func (bss *BucketStoreServer) storeQuery() (int, error) {
 		Start: time.Time{},
 		End:   time.Time{},
 	}
-	r, err := bss.queryServer.RunPowerUsageQuery(t, i)
+	r, err := bss.queryServer.RunPowerUsageQuery(accumulator, t, i)
 	if err != nil {
 		return 0, err
 	}
@@ -45,23 +46,30 @@ func (bss *BucketStoreServer) storeQuery() (int, error) {
 }
 
 func (bss *BucketStoreServer) serverHttp() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+
+	router := httprouter.New()
+
+	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		_, err := fmt.Fprintf(w, "started")
 		if err != nil {
 			log.Err(err).Msg(fmt.Sprintf("could write to http.ResponseWriter"))
 		}
 	})
 
-	http.HandleFunc("/hours/previous", bss.handlePreviousHour)
+	router.GET("/healthcheck", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		w.WriteHeader(http.StatusOK)
+	})
 
-	http.HandleFunc("/days/previous", bss.handlePreviousDay)
+	router.GET("/hours/previous/:accumulator", bss.handlePreviousHour)
+
+	router.GET("/days/previous/:accumulator", bss.handlePreviousDay)
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8085"
+		port = "8081"
 	}
-	log.Debug().Msg(fmt.Sprintf("starting http server port %s", port))
-	err := http.ListenAndServe(":"+port, nil)
+	log.Debug().Msg(fmt.Sprintf("starting http accumulator server port %s", port))
+	err := http.ListenAndServe(":"+port, router)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Could not start http")
 	}
