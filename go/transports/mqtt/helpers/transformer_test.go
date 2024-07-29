@@ -1,8 +1,8 @@
 package helpers
 
 import (
+	"github.com/safecility/brokers/mqtt/messages"
 	"github.com/safecility/go/lib/stream"
-	"github.com/safecility/go/mqtt/messages"
 	"testing"
 )
 
