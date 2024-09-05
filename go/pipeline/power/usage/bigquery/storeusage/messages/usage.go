@@ -7,13 +7,13 @@ import (
 )
 
 type PowerProfile struct {
-	PowerFactor float64 `firestore:",omitempty"`
-	Voltage     float64 `firestore:",omitempty"`
+	PowerFactor float64 `firestore:",omitempty" json:"powerFactor,omitempty"`
+	Voltage     float64 `firestore:",omitempty" json:"voltage,omitempty"`
 }
 
 type PowerDevice struct {
 	lib.Device
-	PowerProfile *PowerProfile `datastore:"-" firestore:",omitempty"`
+	PowerProfile *PowerProfile `datastore:"-" firestore:",omitempty" json:"powerProfile,omitempty"`
 }
 
 type MeterReading struct {

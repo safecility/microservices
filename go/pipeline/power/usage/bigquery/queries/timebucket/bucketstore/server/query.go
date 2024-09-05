@@ -3,6 +3,7 @@ package server
 import (
 	"cloud.google.com/go/bigquery"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/gbigquery"
@@ -10,6 +11,8 @@ import (
 	"strings"
 	"time"
 )
+
+const bigTableTime = "2006-01-02 15:04:05"
 
 type UsageBucket struct {
 	//DeviceUID, min as initial_reading, max as final_reading, (max - min) as kWh, readings, first_reading, last_reading, bucket
@@ -72,7 +75,7 @@ func (dus QueryServer) RunPowerUsageQuery(bucket gbigquery.BucketType, interval 
 	//the FullID replacement is because of really terrible coding by google
 	from := fmt.Sprintf("FROM `%s` ", strings.Replace(dus.queryTable.FullID, ":", ".", 1))
 	if interval != nil {
-		from = fmt.Sprintf(`%s WHERE Time > Timestamp("%s") AND time < Timestamp("%s")`, from, interval.Start.UTC().Format("2006-01-02 15:04:05"), interval.End.UTC().Format("2006-01-02 15:04:05"))
+		from = fmt.Sprintf(`%s WHERE Time > Timestamp("%s") AND time < Timestamp("%s")`, from, interval.Start.UTC().Format(bigTableTime), interval.End.UTC().Format(bigTableTime))
 	}
 	//very hard to get goland not to interpret this as sql hence the "SELECT " +
 	query := "SELECT " +
@@ -108,7 +111,7 @@ func (dus QueryServer) RunPowerUsageQuery(bucket gbigquery.BucketType, interval 
 	for {
 		var row []bigquery.Value
 		iErr := it.Next(&row)
-		if iErr == iterator.Done {
+		if errors.Is(iErr, iterator.Done) {
 			break
 		}
 		if iErr != nil {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/rs/zerolog/log"
+	"github.com/safecility/go/lib/gbigquery"
 	"os"
 )
 
@@ -23,16 +24,8 @@ type Config struct {
 			Usage    string `json:"usage"`
 		} `json:"subscriptions"`
 	} `json:"pubsub"`
-	BigQuery struct {
-		Dataset string `json:"dataset"`
-		Table   string `json:"table"`
-		Schema  struct {
-			Name     string `json:"name"`
-			Revision string `json:"revision"`
-			FilePath string `json:"filePath"`
-		} `json:"schema"`
-	} `json:"bigQuery"`
-	StoreAll bool `json:"storeAll"`
+	BigQuery gbigquery.BQTableConfig `json:"bigQuery"`
+	StoreAll bool                    `json:"storeAll"`
 }
 
 // GetConfig creates a config for the specified deployment

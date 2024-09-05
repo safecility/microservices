@@ -3,14 +3,22 @@ package energy;
 option go_package = ".;protobuffer";
 
 message Usage {
-  string   DeviceUID                    = 1;
+  string   UID                          = 1;
   string   Time                         = 2;
   double   ReadingKWH                   = 3;
-  string   DeviceName                   = 4;
-  string   DeviceTag                    = 5;
+  string   Name                         = 4;
+  string   Tag                          = 5;
   string   CompanyUID                   = 6;
   string   LocationUID                  = 7;
   optional string   SystemUID           = 8;
-  optional string   TenantUID           = 9;
-  optional string   GroupUID            = 10;
+  optional string   SystemName          = 9;
+  optional string   SystemType          = 10;
+  optional string   SystemElement       = 11;
+  optional string   TenantUID           = 12;
+  optional string   TenantName          = 13;
+  optional string   TenantType          = 14;
+  optional string   GroupUID            = 15;
+  optional string   GroupName           = 16;
+  optional string   GroupType           = 17;
+  optional string   GroupElement        = 18;
 }

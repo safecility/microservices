@@ -15,7 +15,6 @@
     "table": "local-usage",
     "schema": {
       "name": "bigquery-usage",
-      "revision": "2",
       "filePath": "./protobuffer/usage.proto"
     }
   },

@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+var (
+	threePhase = "threePhase"
+	solar      = "solar"
+)
+
 func CreateProtobufMessage(r *messages.MeterReading) *Usage {
 
 	usage := &Usage{
@@ -22,28 +27,55 @@ func CreateProtobufMessage(r *messages.MeterReading) *Usage {
 	if r.Processors != nil {
 		for k, p := range *r.Processors {
 			var uid string
-			system, ok := p.(map[string]interface{})
+			var name string
+			processor, ok := p.(map[string]interface{})
 			if ok {
-				i := system["SystemUID"]
-				if i != nil {
-					uid = i.(string)
+				u := processor["uid"]
+				if u != nil {
+					uid = u.(string)
 				} else {
-					log.Warn().Msg("error parsing system UID")
+					log.Warn().Msg("error parsing processor UID")
+				}
+				n := processor["name"]
+				if u != nil {
+					name = n.(string)
+				} else {
+					log.Warn().Msg("error parsing processor name")
 				}
 			}
 
 			switch k {
-			case "Solar":
+			case "solar":
 				usage.SystemUID = &uid
+				usage.SystemName = &name
+				usage.SystemType = &solar
+				el := processor["element"]
+				if el != nil {
+					se := el.(string)
+					usage.SystemElement = &se
+				} else {
+					log.Warn().Msg("error parsing processor name")
+				}
 				break
-			case "Phase":
+			case "phase":
 				usage.SystemUID = &uid
+				usage.SystemName = &name
+				usage.SystemType = &threePhase
+				p := processor["phase"]
+				if p != nil {
+					se := p.(string)
+					usage.SystemElement = &se
+				} else {
+					log.Warn().Msg("error parsing processor name")
+				}
 				break
-			case "Tenant":
+			case "tenant":
 				usage.TenantUID = &uid
+				usage.TenantName = &name
 				break
-			case "Group":
+			case "group":
 				usage.GroupUID = &uid
+				usage.GroupName = &name
 				break
 			}
 		}

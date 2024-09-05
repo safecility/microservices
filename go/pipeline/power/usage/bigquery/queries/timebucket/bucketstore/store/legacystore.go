@@ -6,17 +6,22 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/gbigquery"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/messages"
 )
 
-type DatastoreBuckets struct {
+type BucketStore interface {
+	AddBuckets(m []messages.UsageBucket, ty *gbigquery.BucketType) error
+}
+
+type LegacyDatastore struct {
 	client *datastore.Client
 }
 
-func NewBucketDatastore(client *datastore.Client) *DatastoreBuckets {
-	return &DatastoreBuckets{client: client}
+func NewLegacyDatastore(client *datastore.Client) *LegacyDatastore {
+	return &LegacyDatastore{client: client}
 }
 
-func (d *DatastoreBuckets) AddBuckets(m []gbigquery.UsageBucket, ty *gbigquery.BucketType) error {
+func (d *LegacyDatastore) AddBuckets(m []messages.UsageBucket, ty *gbigquery.BucketType) error {
 	if m == nil || len(m) == 0 {
 		return fmt.Errorf("empty usageBuckets")
 	}
@@ -40,7 +45,7 @@ func (d *DatastoreBuckets) AddBuckets(m []gbigquery.UsageBucket, ty *gbigquery.B
 	return nil
 }
 
-func (d *DatastoreBuckets) GetBucketKey(u *gbigquery.UsageBucket, i *gbigquery.BucketType) (*datastore.Key, error) {
+func (d *LegacyDatastore) GetBucketKey(u *messages.UsageBucket, i *gbigquery.BucketType) (*datastore.Key, error) {
 	var intervalKey string
 
 	switch i.Interval {
