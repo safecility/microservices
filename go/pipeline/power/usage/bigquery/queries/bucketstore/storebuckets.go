@@ -6,9 +6,9 @@ import (
 	"context"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/setup"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/accumulator/helpers"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/accumulator/server"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/accumulator/store"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/bucketstore/helpers"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/bucketstore/server"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/bucketstore/store"
 	"os"
 )
 
@@ -42,7 +42,7 @@ func main() {
 		log.Fatal().Err(err).Msg("Failed to get table metadata")
 	}
 
-	du := server.NewQueryServer(client, tableMetadata, config.BigQuery.Region)
+	qs := server.NewQueryServer(client, tableMetadata, config.BigQuery.Region)
 
 	dsClient, err := datastore.NewClient(ctx, config.ProjectName)
 	if err != nil {
@@ -58,7 +58,7 @@ func main() {
 
 	bStore := store.NewBucketDatastore(dsClient)
 
-	bs := server.NewBucketStoreServer(du, bStore)
+	bs := server.NewBucketStoreServer(qs, bStore)
 
 	bs.Start()
 

@@ -1,0 +1,22 @@
+{
+  "projectName": "safecility-prod",
+  "pubsub": {
+    "topics": {
+      "usage": "prod-power-pipeline-usage",
+      "bigquery": "prod-usage-bigquery"
+    },
+    "subscriptions": {
+      "usage": "prod-power-pipeline-usage-bigquery-sub",
+      "bigquery": "prod-usage-bigquery-sub"
+    }
+  },
+  "bigQuery": {
+    "dataset": "energy",
+    "table": "prod-usage",
+    "schema": {
+      "name": "bigquery-usage",
+      "filePath": "./protobuffer/usage.proto"
+    }
+  },
+  "storeAll": false
+}

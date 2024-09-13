@@ -11,6 +11,12 @@ const (
 	OSDeploymentKey = "DEPLOYMENT"
 )
 
+type PubsubConfig struct {
+	Prefix string
+	Suffix string
+	Setup  []string
+}
+
 type Config struct {
 	ProjectName string `json:"projectName"`
 	BigQuery    struct {
@@ -18,7 +24,11 @@ type Config struct {
 		Table   string `json:"table"`
 		Region  string `json:"region"`
 	} `json:"bigQuery"`
-	StoreAll bool `json:"storeAll"`
+	Pubsub PubsubConfig
+}
+
+func GetTopicName(accumulator string, config PubsubConfig) string {
+	return fmt.Sprintf("%s-%s-%s", config.Prefix, accumulator, config.Suffix)
 }
 
 // GetConfig creates a config for the specified deployment

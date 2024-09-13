@@ -1,0 +1,12 @@
+{
+  "projectName": "safecility-test",
+  "bigQuery": {
+    "dataset": "energy",
+    "table": "test-usage",
+    "region": "europe-west1"
+  },
+  "datastore": {
+    "entity": "DevicePowerUseTest",
+    "storeAll": false
+  }
+}

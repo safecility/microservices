@@ -1,0 +1,13 @@
+{
+  "projectName": "safecility-prod",
+  "bigQuery": {
+    "dataset": "energy",
+    "table": "prod-usage",
+    "region": "EU"
+  },
+  "pubsub": {
+    "prefix": "prod",
+    "suffix": "accumulator",
+    "setup": ["phase"]
+  }
+}

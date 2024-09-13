@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/safecility/go/lib/gbigquery"
-	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/timebucket/bucketstore/store"
+	"github.com/safecility/microservices/go/pipeline/power/usage/bigquery/queries/bucketstore/store"
 	"net/http"
 	"os"
 	"time"
