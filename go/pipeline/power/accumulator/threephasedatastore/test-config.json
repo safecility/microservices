@@ -1,0 +1,15 @@
+{
+  "projectName": "safecility-test",
+  "pubsub": {
+    "topics": {
+      "usage": "test-power-pipeline-usage"
+    },
+    "subscriptions": {
+      "usage": "test-power-pipeline-usage-sub"
+    }
+  },
+  "store": {
+    "entity": "MeterReading",
+    "storeAll": true
+  }
+}

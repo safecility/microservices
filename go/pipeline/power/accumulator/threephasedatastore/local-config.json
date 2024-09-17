@@ -1,0 +1,21 @@
+{
+  "projectName": "safecility-test",
+  "pubsub": {
+    "topics": {
+      "usage": "local-phase-accumulator"
+    },
+    "subscriptions": {
+      "usage": "local-phase-accumulator-sub"
+    }
+  },
+  "store": {
+    "firestore": {
+      "database": "static"
+    },
+    "datastore": {
+      "database": "default",
+      "entity": "TestMeterReading",
+      "storeAll": true
+    }
+  }
+}

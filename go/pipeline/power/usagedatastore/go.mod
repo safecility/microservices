@@ -1,14 +1,13 @@
-module github.com/safecility/microservices/go/transports/mqtt
+module github.com/safecility/microservices/go/pipeline/power/usagestore
 
 go 1.23
 
 require (
+	cloud.google.com/go/datastore v1.19.0
 	cloud.google.com/go/pubsub v1.43.0
-	cloud.google.com/go/secretmanager v1.14.0
 	github.com/rs/zerolog v1.33.0
-	github.com/safecility/brokers/mqtt v0.0.0-20240823102016-5c369a831c02
-	github.com/safecility/go/lib v0.0.0-20240823132415-582adaaef70a
-	github.com/safecility/go/setup v0.0.0-20240823132415-582adaaef70a
+	github.com/safecility/go/lib v0.0.0-20240902132909-3815e35955cc
+	github.com/safecility/go/setup v0.0.0-20240902132909-3815e35955cc
 )
 
 require (
@@ -17,10 +16,10 @@ require (
 	cloud.google.com/go/auth/oauth2adapt v0.2.4 // indirect
 	cloud.google.com/go/compute/metadata v0.5.0 // indirect
 	cloud.google.com/go/iam v1.2.0 // indirect
+	cloud.google.com/go/secretmanager v1.14.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/eclipse/paho.mqtt.golang v1.5.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
@@ -30,7 +29,6 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.3 // indirect
 	github.com/googleapis/gax-go/v2 v2.13.0 // indirect
-	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/redis/go-redis/v9 v9.6.1 // indirect

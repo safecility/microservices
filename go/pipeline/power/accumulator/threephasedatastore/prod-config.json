@@ -1,0 +1,21 @@
+{
+  "projectName": "safecility-prod",
+  "pubsub": {
+    "topics": {
+      "usage": "prod-phase-accumulator"
+    },
+    "subscriptions": {
+      "usage": "prod-phase-accumulator-sub"
+    }
+  },
+  "store": {
+    "firestore": {
+      "database": "admin"
+    },
+    "datastore": {
+      "database": "default",
+      "entity": "TestMeterReading",
+      "storeAll": true
+    }
+  }
+}
